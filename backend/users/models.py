@@ -11,7 +11,8 @@ from .constants import (
     LAST_NAME_MAX_LENGTH,
     ROLE_MAX_LENGTH,
     SUPPLIER_ADDRESS_MAX_LENGTH,
-    SUPPLIER_NAME_MAX_LENGTH
+    SUPPLIER_NAME_MAX_LENGTH,
+    USERNAME_MAX_LENGTH
 )
 from .validators import validate_dealer_code, validate_inn
 
@@ -23,6 +24,12 @@ class UserRole(models.TextChoices):
 
 
 class User(AbstractUser):
+    username = models.CharField(
+        max_length=USERNAME_MAX_LENGTH,
+        unique=True,
+        validators=(UnicodeUsernameValidator(),),
+        verbose_name='Unique username',
+    )
     email = models.EmailField(
         max_length=EMAIL_MAX_LENGTH,
         unique=True,
@@ -42,6 +49,7 @@ class User(AbstractUser):
     )
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = (
+        'username',
         'first_name',
         'last_name',
     )
