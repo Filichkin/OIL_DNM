@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
 
 from .constants import (
     DEALER_NAME_MAX_LENGTH,
@@ -70,7 +71,7 @@ class Dealer(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='users',
+        related_name='dealer_users',
         verbose_name='Dealer user',
     )
     rs_code = models.SmallIntegerField(
@@ -83,11 +84,11 @@ class Dealer(models.Model):
         validators=(UnicodeUsernameValidator(),),
         verbose_name='Unique dealer name',
     )
-    inn = code = models.SmallIntegerField(
+    inn = models.SmallIntegerField(
         verbose_name='Dealer INN',
         validators=(validate_inn,)
     )
-    phone = models.PhoneNumberField()
+    phone = PhoneNumberField(region='RU', blank=False)
 
     def __str__(self):
         return self.code
@@ -97,7 +98,7 @@ class Supplier(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='users',
+        related_name='supplier_users',
         verbose_name='Supplier user',
     )
     name = models.CharField(
@@ -112,11 +113,11 @@ class Supplier(models.Model):
         validators=(UnicodeUsernameValidator(),),
         verbose_name='Unique supplier legal name',
     )
-    inn = code = models.SmallIntegerField(
+    inn = models.SmallIntegerField(
         verbose_name='Supplier INN',
         validators=(validate_inn,)
     )
-    phone = models.PhoneNumberField()
+    phone = PhoneNumberField(region='RU', blank=False)
     contact_name = models.CharField(
         max_length=LAST_NAME_MAX_LENGTH,
     )
