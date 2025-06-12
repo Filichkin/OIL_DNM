@@ -11,7 +11,8 @@ class UserAdmin(UserAdmin):
             None,
             {'fields': (
                 'email', 'username', 'first_name',
-                'last_name', 'password1', 'password2', 'role'
+                'last_name', 'password1', 'password2', 'is_distributor',
+                'is_supplier', 'is_dealer'
             )
             }
         ),
@@ -19,7 +20,7 @@ class UserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         (
             'Custom Fields', {
-                'fields': ('role',)
+                'fields': ('is_distributor', 'is_supplier', 'is_dealer')
                 }
             ),
     )
@@ -29,7 +30,9 @@ class UserAdmin(UserAdmin):
         'email',
         'first_name',
         'last_name',
-        'role'
+        'is_distributor',
+        'is_supplier',
+        'is_dealer'
     )
     list_filter = ('email', 'username')
     search_fields = ('email', 'username',)

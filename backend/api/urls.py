@@ -3,14 +3,13 @@ from django.conf.urls.static import static
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from api.views import DealerViewSer, UserViewSet
+from api.views import UserViewSet
 
 
 app_name = 'api'
 
 router = DefaultRouter()
 
-router.register('dealers', DealerViewSer, 'dealers')
 router.register('users', UserViewSet, 'users')
 
 urlpatterns = [

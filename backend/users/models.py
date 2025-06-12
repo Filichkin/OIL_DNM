@@ -17,12 +17,6 @@ from .constants import (
 from .validators import validate_dealer_code, validate_inn
 
 
-class UserRole(models.TextChoices):
-    DEALER = 'is_dealer'
-    SUPPLIER = 'is_supplier'
-    DISTRIBUTOR = 'is_distributor'
-
-
 class User(AbstractUser):
     username = models.CharField(
         max_length=USERNAME_MAX_LENGTH,
@@ -41,12 +35,10 @@ class User(AbstractUser):
     last_name = models.CharField(
         max_length=LAST_NAME_MAX_LENGTH,
     )
-    role = models.CharField(
-        choices=UserRole.choices,
-        max_length=ROLE_MAX_LENGTH,
-        default=UserRole.DEALER,
-        verbose_name='Role'
-    )
+    is_distributor = models.BooleanField(default=False)
+    is_supplier = models.BooleanField(default=False)
+    is_dealer = models.BooleanField(default=False)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = (
         'username',
@@ -62,26 +54,13 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
-    @property
-    def is_distributor(self):
-        return (
-            self.role == UserRole.DISTRIBUTOR
-            or self.is_superuser
-            or self.is_staff
-        )
-
-    @property
-    def is_supplierr(self):
-        return self.role == UserRole.SUPPLIER
-
 
 class Dealer(models.Model):
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name='dealer_users',
-        verbose_name='Dealer user',
-    )
+        related_name='dealer'
+        )
     rs_code = models.SmallIntegerField(
         verbose_name='Dealer RS code',
         validators=(validate_dealer_code,),
@@ -103,12 +82,11 @@ class Dealer(models.Model):
 
 
 class Supplier(models.Model):
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name='supplier_users',
-        verbose_name='Supplier user',
-    )
+        related_name='supplier'
+        )
     name = models.CharField(
         max_length=SUPPLIER_NAME_MAX_LENGTH,
         unique=True,
