@@ -17,53 +17,10 @@ from .constants import (
 from .validators import validate_dealer_code, validate_inn
 
 
-class User(AbstractUser):
-    username = models.CharField(
-        max_length=USERNAME_MAX_LENGTH,
-        unique=True,
-        validators=(UnicodeUsernameValidator(),),
-        verbose_name='Unique username',
-    )
-    email = models.EmailField(
-        max_length=EMAIL_MAX_LENGTH,
-        unique=True,
-        verbose_name='Email address',
-    )
-    first_name = models.CharField(
-        max_length=FIRST_NAME_MAX_LENGTH,
-    )
-    last_name = models.CharField(
-        max_length=LAST_NAME_MAX_LENGTH,
-    )
-    is_distributor = models.BooleanField(default=False)
-    is_supplier = models.BooleanField(default=False)
-    is_dealer = models.BooleanField(default=False)
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = (
-        'username',
-        'first_name',
-        'last_name',
-    )
-
-    class Meta:
-        verbose_name = 'User'
-        verbose_name_plural = 'Users'
-        ordering = ['id']
-
-    def __str__(self):
-        return self.email
-
-
 class Dealer(models.Model):
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        related_name='dealer'
-        )
-    rs_code = models.SmallIntegerField(
+    rs_code = models.CharField(
         verbose_name='Dealer RS code',
-        validators=(validate_dealer_code,),
+        validators=(validate_dealer_code,)
     )
     name = models.CharField(
         max_length=DEALER_NAME_MAX_LENGTH,
@@ -71,22 +28,17 @@ class Dealer(models.Model):
         validators=(UnicodeUsernameValidator(),),
         verbose_name='Unique dealer name',
     )
-    inn = models.SmallIntegerField(
+    inn = models.BigIntegerField(
         verbose_name='Dealer INN',
         validators=(validate_inn,)
     )
     phone = PhoneNumberField(region='RU', blank=False)
 
     def __str__(self):
-        return self.code
+        return self.rs_code
 
 
 class Supplier(models.Model):
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        related_name='supplier'
-        )
     name = models.CharField(
         max_length=SUPPLIER_NAME_MAX_LENGTH,
         unique=True,
@@ -99,7 +51,7 @@ class Supplier(models.Model):
         validators=(UnicodeUsernameValidator(),),
         verbose_name='Unique supplier legal name',
     )
-    inn = models.SmallIntegerField(
+    inn = models.BigIntegerField(
         verbose_name='Supplier INN',
         validators=(validate_inn,)
     )
@@ -122,3 +74,55 @@ class Supplier(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class User(AbstractUser):
+    username = models.CharField(
+        max_length=USERNAME_MAX_LENGTH,
+        unique=True,
+        validators=(UnicodeUsernameValidator(),),
+        verbose_name='Unique username',
+    )
+    email = models.EmailField(
+        max_length=EMAIL_MAX_LENGTH,
+        unique=True,
+        verbose_name='Email address',
+    )
+    first_name = models.CharField(
+        max_length=FIRST_NAME_MAX_LENGTH,
+    )
+    last_name = models.CharField(
+        max_length=LAST_NAME_MAX_LENGTH,
+    )
+    rs_code = models.ForeignKey(
+        Dealer,
+        on_delete=models.CASCADE,
+        related_name='dealer_users',
+        blank=True,
+        null=True,
+        )
+    supplier = models.ForeignKey(
+        Supplier,
+        on_delete=models.CASCADE,
+        related_name='supplier_users',
+        blank=True,
+        null=True,
+        )
+    is_distributor = models.BooleanField(default=False)
+    is_supplier = models.BooleanField(default=False)
+    is_dealer = models.BooleanField(default=False)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = (
+        'username',
+        'first_name',
+        'last_name',
+    )
+
+    class Meta:
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
+        ordering = ['id']
+
+    def __str__(self):
+        return self.email

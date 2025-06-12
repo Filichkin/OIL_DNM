@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from users.models import User
+from users.models import Dealer, Supplier, User
 
 
 @admin.register(User)
@@ -10,7 +10,7 @@ class UserAdmin(UserAdmin):
         (
             None,
             {'fields': (
-                'email', 'username', 'first_name',
+                'email', 'username', 'first_name', 'rs_code', 'supplier',
                 'last_name', 'password1', 'password2', 'is_distributor',
                 'is_supplier', 'is_dealer'
             )
@@ -20,7 +20,7 @@ class UserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         (
             'Custom Fields', {
-                'fields': ('is_distributor', 'is_supplier', 'is_dealer')
+                'fields': ('is_distributor', 'is_supplier', 'is_dealer', 'rs_code', 'supplier')
                 }
             ),
     )
@@ -37,3 +37,27 @@ class UserAdmin(UserAdmin):
     list_filter = ('email', 'username')
     search_fields = ('email', 'username',)
     empty_value_display = '-empty-'
+
+
+@admin.register(Dealer)
+class DealerAdmin(admin.ModelAdmin):
+    list_display = (
+        'rs_code',
+        'name',
+        'inn',
+        'phone'
+    )
+
+
+@admin.register(Supplier)
+class SupplierAdmin(admin.ModelAdmin):
+    list_display = (
+        'name',
+        'legal_name',
+        'inn',
+        'phone',
+        'contact_name',
+        'contact_job_title',
+        'address',
+        'legal_address'
+    )
