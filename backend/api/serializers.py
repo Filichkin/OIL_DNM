@@ -14,4 +14,9 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'first_name',
             'last_name',
+            'rs_code',
+            'supplier',
+            'is_distributor',
+            'is_supplier',
+            'is_dealer',
         )
