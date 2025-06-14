@@ -3,7 +3,11 @@ from django.conf.urls.static import static
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from api.views import DealerViewSet, UserViewSet
+from api.users.views import (
+    DealerViewSet,
+    SupplierViewSet,
+    UserViewSet
+)
 
 
 app_name = 'api'
@@ -11,6 +15,7 @@ app_name = 'api'
 router = DefaultRouter()
 
 router.register('dealers', DealerViewSet, 'dealers')
+router.register('suppliers', SupplierViewSet, 'suppliers')
 router.register('users', UserViewSet, 'users')
 
 urlpatterns = [

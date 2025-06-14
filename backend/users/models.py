@@ -40,7 +40,6 @@ class Supplier(models.Model):
     name = models.CharField(
         max_length=SUPPLIER_NAME_MAX_LENGTH,
         unique=True,
-        validators=(UnicodeUsernameValidator(),),
         verbose_name='Unique supplier name',
     )
     legal_name = models.CharField(

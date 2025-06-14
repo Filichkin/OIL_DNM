@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from users.models import (
     Dealer,
+    Supplier,
     User
 )
 
@@ -53,3 +54,43 @@ class DealerReadSerializer(serializers.ModelSerializer):
             'phone',
             'users',
         )
+
+
+class SupplierCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Supplier
+        fields = (
+            'id',
+            'name',
+            'legal_name',
+            'inn',
+            'phone',
+            'contact_name',
+            'contact_job_title',
+            'address',
+            'legal_address'
+            )
+
+
+class SupplierReadSerializer(serializers.ModelSerializer):
+    users = UserSerializer(
+        read_only=True,
+        many=True,
+        source='supplier_users'
+        )
+
+    class Meta:
+        model = Supplier
+        fields = (
+            'id',
+            'name',
+            'legal_name',
+            'inn',
+            'phone',
+            'contact_name',
+            'contact_job_title',
+            'address',
+            'legal_address',
+            'users'
+            )

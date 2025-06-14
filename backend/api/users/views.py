@@ -1,13 +1,18 @@
 from djoser.views import UserViewSet
 from rest_framework import viewsets
 
-from api.permissions import IsDistributor, IsDistributorOrIsAuthenticated
-from api.serializers import (
+from api.users.permissions import (
+    IsDistributor,
+    IsDistributorOrIsAuthenticated
+)
+from api.users.serializers import (
     DealerCreateSerializer,
     DealerReadSerializer,
+    SupplierCreateSerializer,
+    SupplierReadSerializer,
     UserSerializer
 )
-from users.models import Dealer, User
+from users.models import Dealer, Supplier, User
 
 
 class UserViewSet(UserViewSet):
@@ -30,3 +35,14 @@ class DealerViewSet(viewsets.ModelViewSet):
         if self.action in {'create', 'partial_update'}:
             return DealerCreateSerializer
         return DealerReadSerializer
+
+
+class SupplierViewSet(viewsets.ModelViewSet):
+    queryset = Supplier.objects.all()
+    permission_classes = (IsDistributor,)
+    http_method_names = ('get', 'post', 'patch', 'delete')
+
+    def get_serializer_class(self):
+        if self.action in {'create', 'partial_update'}:
+            return SupplierCreateSerializer
+        return SupplierReadSerializer

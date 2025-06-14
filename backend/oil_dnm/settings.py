@@ -129,13 +129,13 @@ DJOSER = {
     'LOGIN_FIELD': 'email',
     'HIDE_USERS': False,
     'PERMISSIONS': {
-        'current_user': ['api.permissions.IsDistributorOrIsAuthenticated'],
-        'user': ['api.permissions.IsDistributor'],
-        'user_list': ['api.permissions.IsDistributor'],
+        'current_user': ['api.users.permissions.IsDistributorOrIsAuthenticated'],
+        'user': ['api.users.permissions.IsDistributor'],
+        'user_list': ['api.users.permissions.IsDistributor'],
     },
     'SERIALIZERS': {
-        'user': 'api.serializers.UserSerializer',
-        'current_user': 'api.serializers.UserSerializer',
+        'user': 'api.users.serializers.UserSerializer',
+        'current_user': 'api.users.serializers.UserSerializer',
     }
 }
 
