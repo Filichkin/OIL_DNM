@@ -37,7 +37,7 @@ class DealerCreateSerializer(serializers.ModelSerializer):
 
 
 class DealerReadSerializer(serializers.ModelSerializer):
-    user = UserSerializer(
+    users = UserSerializer(
         read_only=True,
         many=True,
         source='dealer_users'
@@ -51,5 +51,5 @@ class DealerReadSerializer(serializers.ModelSerializer):
             'name',
             'inn',
             'phone',
-            'user',
+            'users',
         )

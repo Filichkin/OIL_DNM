@@ -22,8 +22,8 @@ class UserViewSet(UserViewSet):
 
 
 class DealerViewSet(viewsets.ModelViewSet):
-    queryset = Dealer.objects.annotate()
-    permission_classes = (IsDistributorOrIsAuthenticated,)
+    queryset = Dealer.objects.all()
+    permission_classes = (IsDistributor,)
     http_method_names = ('get', 'post', 'patch', 'delete')
 
     def get_serializer_class(self):

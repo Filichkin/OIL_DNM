@@ -9,7 +9,6 @@ from .constants import (
     FIRST_NAME_MAX_LENGTH,
     JOB_TITLE_MAX_LENGTH,
     LAST_NAME_MAX_LENGTH,
-    ROLE_MAX_LENGTH,
     SUPPLIER_ADDRESS_MAX_LENGTH,
     SUPPLIER_NAME_MAX_LENGTH,
     USERNAME_MAX_LENGTH
@@ -25,7 +24,6 @@ class Dealer(models.Model):
     name = models.CharField(
         max_length=DEALER_NAME_MAX_LENGTH,
         unique=True,
-        validators=(UnicodeUsernameValidator(),),
         verbose_name='Unique dealer name',
     )
     inn = models.BigIntegerField(
