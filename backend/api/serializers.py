@@ -23,8 +23,25 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
 
-class DealerSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True, many=True)
+class DealerCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Dealer
+        fields = (
+            'id',
+            'rs_code',
+            'name',
+            'inn',
+            'phone'
+        )
+
+
+class DealerReadSerializer(serializers.ModelSerializer):
+    user = UserSerializer(
+        read_only=True,
+        many=True,
+        source='dealer_users'
+        )
 
     class Meta:
         model = Dealer
