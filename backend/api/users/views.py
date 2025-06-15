@@ -1,5 +1,7 @@
 from djoser.views import UserViewSet
 from rest_framework import viewsets
+from rest_framework.filters import SearchFilter
+from rest_framework.pagination import PageNumberPagination
 
 from api.users.permissions import (
     IsDistributor,
@@ -19,6 +21,9 @@ class UserViewSet(UserViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsDistributor,)
+    pagination_class = PageNumberPagination
+    filter_backends = (SearchFilter,)
+    search_fields = ('^last_name',)
 
     def get_permissions(self):
         if self.action == 'me':
@@ -29,6 +34,9 @@ class UserViewSet(UserViewSet):
 class DealerViewSet(viewsets.ModelViewSet):
     queryset = Dealer.objects.all()
     permission_classes = (IsDistributor,)
+    pagination_class = PageNumberPagination
+    filter_backends = (SearchFilter,)
+    search_fields = ('^rs_code',)
     http_method_names = ('get', 'post', 'patch', 'delete')
 
     def get_serializer_class(self):
@@ -40,6 +48,9 @@ class DealerViewSet(viewsets.ModelViewSet):
 class SupplierViewSet(viewsets.ModelViewSet):
     queryset = Supplier.objects.all()
     permission_classes = (IsDistributor,)
+    pagination_class = PageNumberPagination
+    filter_backends = (SearchFilter,)
+    search_fields = ('^name',)
     http_method_names = ('get', 'post', 'patch', 'delete')
 
     def get_serializer_class(self):
