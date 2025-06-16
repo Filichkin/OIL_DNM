@@ -1,19 +1,39 @@
 from django.contrib import admin
 
-from catalog.models import Product
+from catalog.models import Catalog, Product
+
+
+@admin.register(Catalog)
+class CatalogAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'supplier',
+        'brand',
+        'name',
+        'part_number',
+        'volume',
+        'price_per_litre',
+        'price_per_box',
+        'avalible_count',
+        'transit_count',
+        'arrival_date',
+        'updated_date',
+        )
+    search_fields = ('name', 'part_number',)
 
 
 @admin.register(Product)
-class IngredientAdmin(admin.ModelAdmin):
+class ProductAdmin(admin.ModelAdmin):
     list_display = (
         'id',
+        'supplier',
         'name',
         'part_number',
         'brand',
         'package_count',
         'volume',
-        'price',
+        'price_per_unit',
         'description',
-        'specification',
+        'specification'
         )
     search_fields = ('name', 'part_number',)

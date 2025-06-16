@@ -8,9 +8,79 @@ from .constants import (
     PRODUCT_NAME_MAX_LENGTH,
     VOLUME_LITRES_MIN
 )
+from users.constants import SUPPLIER_NAME_MAX_LENGTH
+from users.models import Supplier
+
+
+class Catalog(models.Model):
+    supplier = models.CharField(
+        max_length=SUPPLIER_NAME_MAX_LENGTH,
+        unique=True,
+        verbose_name='Supplier name',
+    )
+    brand = models.CharField(
+        verbose_name='Brand name',
+    )
+    name = models.CharField(
+        max_length=PRODUCT_NAME_MAX_LENGTH,
+        unique=True,
+        verbose_name='Product name',
+    )
+    part_number = models.CharField(
+        unique=True,
+        verbose_name='Part number',
+    )
+    volume = models.PositiveSmallIntegerField(
+        validators=(MinValueValidator(
+            VOLUME_LITRES_MIN,
+            f'Can not be less than {VOLUME_LITRES_MIN} litres!'
+        ),),
+        verbose_name='Volume in litres',
+    )
+    price_per_litre = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name='Price for litre'
+        )
+    price_per_box = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name='Price for box'
+        )
+    avalible_count = models.PositiveSmallIntegerField(
+        verbose_name='Avalible count',
+    )
+    transit_count = models.PositiveSmallIntegerField(
+        verbose_name='Avalible in transit',
+    )
+    arrival_date = models.DateTimeField(
+        verbose_name='Estimated arrival date'
+        )
+    updated_date = models.DateTimeField(
+        verbose_name='Date of count and transit updated'
+        )
+
+    class Meta:
+        ordering = ['brand']
+        indexes = [
+            models.Index(fields=['id']),
+            models.Index(fields=['name']),
+        ]
+        verbose_name = 'Catalog'
+        verbose_name_plural = 'Catalog'
+
+    def __str__(self):
+        return self.name
 
 
 class Product(models.Model):
+    supplier = models.ForeignKey(
+        Supplier,
+        on_delete=models.CASCADE,
+        related_name='products',
+        blank=False,
+        null=False,
+        )
     name = models.CharField(
         max_length=PRODUCT_NAME_MAX_LENGTH,
         unique=True,
@@ -35,12 +105,12 @@ class Product(models.Model):
             VOLUME_LITRES_MIN,
             f'Can not be less than {VOLUME_LITRES_MIN} litres!'
         ),),
-        verbose_name='Voulume in litres',
+        verbose_name='Volume in litres',
     )
-    price = models.DecimalField(
+    price_per_unit = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        verbose_name='Price'
+        verbose_name='Price for box'
         )
     description = models.CharField(
         max_length=PRODUCT_DESCRIPTION_MAX_LENGTH,
@@ -62,22 +132,9 @@ class Product(models.Model):
         null=True,
         blank=True
         )
-    created = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Дата и время размещения'
-        )
-    updated = models.DateTimeField(
-        auto_now=True,
-        verbose_name='Дата и время обновления'
-        )
 
     class Meta:
-        ordering = ['brand']
-        indexes = [
-            models.Index(fields=['id']),
-            models.Index(fields=['name']),
-            models.Index(fields=['-created']),
-        ]
+        ordering = ['supplier']
         verbose_name = 'Product'
         verbose_name_plural = 'Products'
 
