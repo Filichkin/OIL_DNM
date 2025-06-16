@@ -46,16 +46,37 @@ class Product(models.Model):
         max_length=PRODUCT_DESCRIPTION_MAX_LENGTH,
         verbose_name='Product description',
     )
-    specification = description = models.CharField(
+    specification = models.CharField(
         max_length=PRODUCT_SPECIFICATION_MAX_LENGTH,
         verbose_name='Product specification',
     )
+    image = models.ImageField(
+        upload_to='media/product_image/',
+        verbose_name='Product image',
+        null=True,
+        blank=True
+        )
+    specification_file = models.FileField(
+        upload_to='media/product_specification_file/',
+        verbose_name='Product specification file',
+        null=True,
+        blank=True
+        )
+    created = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата и время размещения'
+        )
+    updated = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Дата и время обновления'
+        )
 
     class Meta:
         ordering = ['brand']
         indexes = [
             models.Index(fields=['id']),
             models.Index(fields=['name']),
+            models.Index(fields=['-created']),
         ]
         verbose_name = 'Product'
         verbose_name_plural = 'Products'
