@@ -45,7 +45,6 @@ class Supplier(models.Model):
     legal_name = models.CharField(
         max_length=SUPPLIER_NAME_MAX_LENGTH,
         unique=True,
-        validators=(UnicodeUsernameValidator(),),
         verbose_name='Unique supplier legal name',
     )
     inn = models.BigIntegerField(

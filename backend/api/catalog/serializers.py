@@ -1,14 +1,17 @@
+from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from catalog.models import Brand, Product, Supplier
 
 
+class BrandSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = ('name',)
+        model = Brand
+
+
 class ProductWriteSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор только для записи данных.
-    Возвращает JSON-данные всех полей модели Product
-    для эндпоинта api/products/.
-    """
 
     brand = serializers.PrimaryKeyRelatedField(
         queryset=Brand.objects.all(),
@@ -18,12 +21,13 @@ class ProductWriteSerializer(serializers.ModelSerializer):
         queryset=Supplier.objects.all(),
         label='Suppliers',
     )
+    image = Base64ImageField()
+    specification_file = serializers.FileField()
 
     class Meta:
         fields = (
-            'id',
             'brand',
-            'supplier'
+            'supplier',
             'name',
             'part_number',
             'package_count',
@@ -33,5 +37,24 @@ class ProductWriteSerializer(serializers.ModelSerializer):
             'specification',
             'image',
             'specification_file',
+        )
+        model = Product
+
+
+class ProductReadSerializer(serializers.ModelSerializer):
+    brand = serializers.ReadOnlyField(source='brand.name')
+    supplier = serializers.ReadOnlyField(source='supplier.name')
+
+    class Meta:
+        fields = (
+            'brand',
+            'supplier',
+            'name',
+            'part_number',
+            'package_count',
+            'volume',
+            'price_per_unit',
+            'description',
+            'specification',
         )
         model = Product
