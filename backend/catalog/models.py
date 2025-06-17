@@ -73,6 +73,19 @@ class Catalog(models.Model):
         return self.name
 
 
+class Brand(models.Model):
+    name = models.CharField(
+        verbose_name='Brand name',
+    )
+
+    class Meta:
+        verbose_name = 'Brand'
+        verbose_name_plural = 'Brands'
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     supplier = models.ForeignKey(
         Supplier,
@@ -89,10 +102,16 @@ class Product(models.Model):
     part_number = models.CharField(
         unique=True,
         verbose_name='Part number',
+        primary_key=True
     )
-    brand = models.CharField(
-        verbose_name='Brand name',
-    )
+    brand = models.ForeignKey(
+        Brand,
+        on_delete=models.CASCADE,
+        related_name='products',
+        blank=False,
+        null=False,
+        verbose_name='Brand name'
+        )
     package_count = models.PositiveSmallIntegerField(
         validators=(MinValueValidator(
             PACKAGE_COUNT_MIN,

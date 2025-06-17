@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from catalog.models import Catalog, Product
+from catalog.models import Brand, Catalog, Product
 
 
 @admin.register(Catalog)
@@ -22,10 +22,17 @@ class CatalogAdmin(admin.ModelAdmin):
     search_fields = ('name', 'part_number',)
 
 
+@admin.register(Brand)
+class BrandAdmin(admin.ModelAdmin):
+    list_display = (
+        'name',
+        )
+    search_fields = ('name',)
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
-        'id',
         'supplier',
         'name',
         'part_number',
