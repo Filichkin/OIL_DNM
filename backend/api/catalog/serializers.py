@@ -21,8 +21,8 @@ class ProductWriteSerializer(serializers.ModelSerializer):
         queryset=Supplier.objects.all(),
         label='Suppliers',
     )
-    image = Base64ImageField()
-    specification_file = serializers.FileField()
+    image = Base64ImageField(required=False)
+    specification_file = serializers.FileField(required=False)
 
     class Meta:
         fields = (
