@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from catalog.models import Product
+from catalog.models import Brand, Product, Supplier
 
 
 class ProductWriteSerializer(serializers.ModelSerializer):
@@ -10,23 +10,28 @@ class ProductWriteSerializer(serializers.ModelSerializer):
     для эндпоинта api/products/.
     """
 
-    category = serializers.SlugRelatedField(
-        slug_field='slug',
-        queryset=Category.objects.all()
+    brand = serializers.PrimaryKeyRelatedField(
+        queryset=Brand.objects.all(),
+        label='Brands',
     )
-    genre = serializers.SlugRelatedField(
-        slug_field='slug',
-        queryset=Genre.objects.all(),
-        many=True
+    supplier = serializers.PrimaryKeyRelatedField(
+        queryset=Supplier.objects.all(),
+        label='Suppliers',
     )
 
     class Meta:
         fields = (
             'id',
+            'brand',
+            'supplier'
             'name',
-            'year',
+            'part_number',
+            'package_count',
+            'volume',
+            'price_per_unit',
             'description',
-            'genre',
-            'category'
+            'specification',
+            'image',
+            'specification_file',
         )
-        model = Title
+        model = Product
