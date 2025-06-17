@@ -139,12 +139,6 @@ class Product(models.Model):
         max_length=PRODUCT_SPECIFICATION_MAX_LENGTH,
         verbose_name='Product specification',
     )
-    image = models.ImageField(
-        upload_to='media/product_image/',
-        verbose_name='Product image',
-        null=True,
-        blank=True
-        )
     specification_file = models.FileField(
         upload_to='media/product_specification_file/',
         verbose_name='Product specification file',
@@ -159,3 +153,24 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ProductImages(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='product_images'
+        )
+    images = models.ImageField(
+        upload_to='media/product_images/',
+        verbose_name='Product images',
+        null=True,
+        blank=True
+        )
+
+    class Meta:
+        verbose_name = 'Product images'
+
+    def __str__(self):
+        return self.product

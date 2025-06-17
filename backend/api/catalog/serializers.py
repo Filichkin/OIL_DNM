@@ -1,7 +1,8 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
-from catalog.models import Brand, Product, Supplier
+from catalog.models import Brand, Product, ProductImages
+from users.models import Supplier
 
 
 class BrandSerializer(serializers.ModelSerializer):
@@ -9,6 +10,16 @@ class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('name',)
         model = Brand
+
+
+class ProductImagesSerializer(serializers.ModelSerializer):
+    images = Base64ImageField(required=False)
+
+    class Meta:
+        fields = (
+            'images',
+            )
+        model = ProductImages
 
 
 class ProductWriteSerializer(serializers.ModelSerializer):
@@ -21,7 +32,6 @@ class ProductWriteSerializer(serializers.ModelSerializer):
         queryset=Supplier.objects.all(),
         label='Suppliers',
     )
-    image = Base64ImageField(required=False)
     specification_file = serializers.FileField(required=False)
 
     class Meta:
@@ -35,15 +45,16 @@ class ProductWriteSerializer(serializers.ModelSerializer):
             'price_per_unit',
             'description',
             'specification',
-            'image',
             'specification_file',
         )
         model = Product
 
 
 class ProductReadSerializer(serializers.ModelSerializer):
+
     brand = serializers.ReadOnlyField(source='brand.name')
     supplier = serializers.ReadOnlyField(source='supplier.name')
+    images = ProductImagesSerializer(many=True, source='product_images')
 
     class Meta:
         fields = (
@@ -56,5 +67,7 @@ class ProductReadSerializer(serializers.ModelSerializer):
             'price_per_unit',
             'description',
             'specification',
+            'images',
+            'specification_file',
         )
         model = Product
