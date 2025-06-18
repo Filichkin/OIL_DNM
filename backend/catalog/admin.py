@@ -39,7 +39,7 @@ class ProductAdmin(admin.ModelAdmin):
         'brand',
         'package_count',
         'volume',
-        'price_per_unit',
+        'price_per_box',
         'description',
         'specification'
         )

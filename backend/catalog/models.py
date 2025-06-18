@@ -129,7 +129,7 @@ class Product(models.Model):
         ),),
         verbose_name='Volume in litres',
     )
-    price_per_unit = models.DecimalField(
+    price_per_box = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         verbose_name='Price for box'
@@ -156,7 +156,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 
 def product_image_upload_to(instance, filename):
     return f'product_images/{instance.product.part_number}/{filename}'
