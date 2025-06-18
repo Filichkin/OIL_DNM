@@ -6,6 +6,9 @@ class IsDistributor(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.is_distributor
 
+    def has_object_permission(self, request, view, obj):
+        return request.user.is_authenticated and request.user.is_distributor
+
 
 class IsDistributorOrIsAuthenticated(permissions.IsAuthenticated):
 
@@ -16,7 +19,7 @@ class IsDistributorOrIsAuthenticated(permissions.IsAuthenticated):
         )
 
 
-class IsDistributorReadOnly(permissions.BasePermission):
+class IsDistributorOrReadOnly(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return (
@@ -24,5 +27,5 @@ class IsDistributorReadOnly(permissions.BasePermission):
                 request.method in permissions.SAFE_METHODS
                 and request.user.is_authenticated
                 )
-            or (request.user.is_authenticated and request.user.is_admin)
+            or (request.user.is_authenticated and request.user.is_distributor)
         )

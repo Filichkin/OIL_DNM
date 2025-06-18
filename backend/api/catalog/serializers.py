@@ -22,7 +22,7 @@ class ProductImagesSerializer(serializers.ModelSerializer):
         model = ProductImages
 
 
-class ProductWriteSerializer(serializers.ModelSerializer):
+class ProductCreateSerializer(serializers.ModelSerializer):
 
     brand = serializers.PrimaryKeyRelatedField(
         queryset=Brand.objects.all(),
