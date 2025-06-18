@@ -13,14 +13,12 @@ class BrandSerializer(serializers.ModelSerializer):
 
 
 class ProductImagesSerializer(serializers.ModelSerializer):
-    images = Base64ImageField(required=False)
+    image = Base64ImageField(required=False)
 
     class Meta:
         fields = (
-            'product',
-            'images',
+            'image',
             )
-        read_only_fields = ('product',)
         model = ProductImages
 
 
@@ -37,7 +35,7 @@ class ProductWriteSerializer(serializers.ModelSerializer):
     specification_file = serializers.FileField(required=False)
     images = serializers.ListField(
         child=Base64ImageField(required=False),
-        min_length=1,
+        min_length=0,
         write_only=True,
         required=False,
     )
@@ -67,11 +65,12 @@ class ProductWriteSerializer(serializers.ModelSerializer):
             supplier=supplier,
             **validated_data
         )
-        for image in images:
-            ProductImages.objects.create(
-                product=product,
-                image=image,
-            )
+        if images:
+            for image in images:
+                ProductImages.objects.create(
+                    product=product,
+                    image=image,
+                )
         return product
 
 

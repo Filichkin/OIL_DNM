@@ -50,5 +50,5 @@ class ProductAdmin(admin.ModelAdmin):
 class ProductImagesAdmin(admin.ModelAdmin):
     list_display = (
         'product',
-        'images',
+        'image',
         )

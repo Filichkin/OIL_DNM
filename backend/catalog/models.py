@@ -169,16 +169,16 @@ class ProductImages(models.Model):
         null=True,
         related_name='product_images'
         )
-    images = models.ImageField(
+    image = models.ImageField(
         upload_to=product_image_upload_to,
         validators=[FileExtensionValidator(['png', 'jpg', 'jpeg', 'gif'])],
-        verbose_name='Product images',
+        verbose_name='Product image',
         null=True,
         blank=True
         )
 
     class Meta:
-        verbose_name = 'Product images'
+        verbose_name = 'Product image'
 
     def __str__(self):
         return self.product.name
