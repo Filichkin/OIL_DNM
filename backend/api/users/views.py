@@ -37,7 +37,7 @@ class DealerViewSet(viewsets.ModelViewSet):
     pagination_class = PageNumberPagination
     filter_backends = (SearchFilter,)
     search_fields = ('^rs_code',)
-    http_method_names = ('GET', 'POST', 'PATCH', 'DELETE')
+    http_method_names = ('get', 'post', 'patch', 'delete')
 
     def get_serializer_class(self):
         if self.action in {'create', 'partial_update'}:
@@ -51,7 +51,7 @@ class SupplierViewSet(viewsets.ModelViewSet):
     pagination_class = PageNumberPagination
     filter_backends = (SearchFilter,)
     search_fields = ('^name',)
-    http_method_names = ('GET', 'POST', 'PATCH', 'DELETE')
+    http_method_names = ('get', 'post', 'patch', 'delete')
 
     def get_serializer_class(self):
         if self.action in {'create', 'partial_update'}:

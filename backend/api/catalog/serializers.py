@@ -1,7 +1,7 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
-from catalog.models import Brand, Product, ProductImages
+from catalog.models import Brand, Catalog, Product, ProductImages
 from users.models import Supplier
 
 
@@ -10,6 +10,14 @@ class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('name',)
         model = Brand
+
+
+class CatalogSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            '__all__'
+            )
+        model = Catalog
 
 
 class ProductImagesSerializer(serializers.ModelSerializer):

@@ -8,13 +8,14 @@ from api.users.views import (
     SupplierViewSet,
     UserViewSet
 )
-from api.catalog.views import ProductViewSet
+from api.catalog.views import CatalogViewSet, ProductViewSet
 
 
 app_name = 'api'
 
 router = DefaultRouter()
 
+router.register('catalog', CatalogViewSet, 'catalog')
 router.register('dealers', DealerViewSet, 'dealers')
 router.register('products', ProductViewSet, 'products')
 router.register('suppliers', SupplierViewSet, 'suppliers')
