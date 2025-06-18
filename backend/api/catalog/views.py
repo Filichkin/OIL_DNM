@@ -16,7 +16,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     pagination_class = PageNumberPagination
     filter_backends = (SearchFilter,)
     search_fields = ('^part_number',)
-    http_method_names = ('get', 'post', 'patch', 'delete')
+    http_method_names = ('GET', 'POST', 'PATCH', 'DELETE')
 
     def get_serializer_class(self):
         if self.action in {'create', 'partial_update'}:
