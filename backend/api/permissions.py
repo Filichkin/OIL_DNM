@@ -14,3 +14,15 @@ class IsDistributorOrIsAuthenticated(permissions.IsAuthenticated):
             request.user.is_authenticated
             or request.user.is_distributor
         )
+
+
+class IsDistributorReadOnly(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        return (
+            (
+                request.method in permissions.SAFE_METHODS
+                and request.user.is_authenticated
+                )
+            or (request.user.is_authenticated and request.user.is_admin)
+        )
