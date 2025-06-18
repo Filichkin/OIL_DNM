@@ -1,4 +1,7 @@
-from django.core.validators import MinValueValidator
+from django.core.validators import (
+    FileExtensionValidator,
+    MinValueValidator
+)
 from django.db import models
 
 from .constants import (
@@ -153,6 +156,10 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+def product_image_upload_to(instance, filename):
+    return f'product_images/{instance.product.part_number}/{filename}'
 
 
 class ProductImages(models.Model):
@@ -163,7 +170,8 @@ class ProductImages(models.Model):
         related_name='product_images'
         )
     images = models.ImageField(
-        upload_to='media/product_images/',
+        upload_to=product_image_upload_to,
+        validators=[FileExtensionValidator(['png', 'jpg', 'jpeg', 'gif'])],
         verbose_name='Product images',
         null=True,
         blank=True
@@ -173,4 +181,4 @@ class ProductImages(models.Model):
         verbose_name = 'Product images'
 
     def __str__(self):
-        return self.product
+        return self.product.name

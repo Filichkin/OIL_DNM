@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from catalog.models import Brand, Catalog, Product
+from catalog.models import Brand, Catalog, Product, ProductImages
 
 
 @admin.register(Catalog)
@@ -44,3 +44,11 @@ class ProductAdmin(admin.ModelAdmin):
         'specification'
         )
     search_fields = ('name', 'part_number',)
+
+
+@admin.register(ProductImages)
+class ProductImagesAdmin(admin.ModelAdmin):
+    list_display = (
+        'product',
+        'images',
+        )
