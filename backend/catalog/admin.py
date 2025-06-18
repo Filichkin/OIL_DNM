@@ -7,7 +7,6 @@ from catalog.models import Brand, Catalog, Product, ProductImages
 class CatalogAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'supplier',
         'brand',
         'name',
         'part_number',

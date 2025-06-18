@@ -12,12 +12,70 @@ class BrandSerializer(serializers.ModelSerializer):
         model = Brand
 
 
-class CatalogSerializer(serializers.ModelSerializer):
+class CatalogReadSerializer(serializers.ModelSerializer):
+    supplier = serializers.ReadOnlyField()
+
     class Meta:
         fields = (
-            '__all__'
+            'id',
+            'supplier',
+            'brand',
+            'name',
+            'part_number',
+            'volume',
+            'price_per_litre',
+            'price_per_box',
+            'avalible_count',
+            'transit_count',
+            'arrival_date',
+            'updated_date',
             )
         model = Catalog
+
+
+class CatalogCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id',
+            'brand',
+            'name',
+            'part_number',
+            'volume',
+            'price_per_litre',
+            'price_per_box',
+            'avalible_count',
+            'transit_count',
+            'arrival_date',
+            'updated_date',
+            )
+        model = Catalog
+
+    def update(self, instance, validated_data):
+        instance.price_per_litre = validated_data.get(
+            'price_per_litre',
+            instance.price_per_litre
+            )
+        instance.price_per_box = validated_data.get(
+            'price_per_box',
+            instance.price_per_box
+            )
+        instance.avalible_count = validated_data.get(
+            'avalible_count',
+            instance.avalible_count
+            )
+        instance.transit_count = validated_data.get(
+            'transit_count',
+            instance.transit_count
+            )
+        instance.arrival_date = validated_data.get(
+            'arrival_date',
+            instance.arrival_date
+            )
+        instance.updated_date = validated_data.get(
+            'updated_date',
+            instance.updated_date
+            )
+        return super().update(instance, validated_data)
 
 
 class ProductImagesSerializer(serializers.ModelSerializer):

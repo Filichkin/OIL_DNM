@@ -16,11 +16,6 @@ from users.models import Supplier
 
 
 class Catalog(models.Model):
-    supplier = models.CharField(
-        max_length=SUPPLIER_NAME_MAX_LENGTH,
-        unique=True,
-        verbose_name='Supplier name',
-    )
     brand = models.CharField(
         verbose_name='Brand name',
     )
