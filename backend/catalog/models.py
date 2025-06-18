@@ -52,9 +52,13 @@ class Catalog(models.Model):
         verbose_name='Avalible in transit',
     )
     arrival_date = models.DateTimeField(
+        null=True,
+        blank=True,
         verbose_name='Estimated arrival date'
         )
     updated_date = models.DateTimeField(
+        null=True,
+        blank=True,
         verbose_name='Date of count and transit updated'
         )
 
