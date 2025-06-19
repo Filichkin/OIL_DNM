@@ -51,12 +51,13 @@ class Catalog(models.Model):
     transit_count = models.PositiveSmallIntegerField(
         verbose_name='Avalible in transit',
     )
-    arrival_date = models.DateTimeField(
+    arrival_date = models.CharField(
         null=True,
         blank=True,
         verbose_name='Estimated arrival date'
         )
     updated_date = models.DateTimeField(
+        auto_now_add=True,
         null=True,
         blank=True,
         verbose_name='Date of count and transit updated'
