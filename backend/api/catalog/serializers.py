@@ -29,6 +29,7 @@ class CatalogReadSerializer(serializers.ModelSerializer):
             'transit_count',
             'arrival_date',
             'updated_date',
+            'specification',
             )
         model = Catalog
 
@@ -47,6 +48,7 @@ class CatalogCreateSerializer(serializers.ModelSerializer):
             'transit_count',
             'arrival_date',
             'updated_date',
+            'specification',
             )
         model = Catalog
 

@@ -142,3 +142,4 @@ static/
 media/
 .DS_Store
 commands.txt
+data/

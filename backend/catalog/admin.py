@@ -17,6 +17,7 @@ class CatalogAdmin(admin.ModelAdmin):
         'transit_count',
         'arrival_date',
         'updated_date',
+        'specification'
         )
     search_fields = ('name', 'part_number',)
 

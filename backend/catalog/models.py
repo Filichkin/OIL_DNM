@@ -61,6 +61,10 @@ class Catalog(models.Model):
         blank=True,
         verbose_name='Date of count and transit updated'
         )
+    specification = models.CharField(
+        max_length=PRODUCT_SPECIFICATION_MAX_LENGTH,
+        verbose_name='Product specification',
+    )
 
     class Meta:
         ordering = ['brand']
