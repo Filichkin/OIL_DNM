@@ -14,6 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'email',
+            'phone',
             'first_name',
             'last_name',
             'rs_code',
@@ -33,7 +34,8 @@ class DealerCreateSerializer(serializers.ModelSerializer):
             'rs_code',
             'name',
             'inn',
-            'phone'
+            'address',
+            'legal_address',
         )
 
 
@@ -51,7 +53,8 @@ class DealerReadSerializer(serializers.ModelSerializer):
             'rs_code',
             'name',
             'inn',
-            'phone',
+            'address',
+            'legal_address',
             'users',
         )
 
