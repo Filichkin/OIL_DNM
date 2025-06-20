@@ -1,8 +1,9 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
+from cart.models import Cart
 from catalog.models import Brand, Catalog, Product, ProductImages
-from users.models import Supplier
+from users.models import Dealer, Supplier
 
 
 class BrandSerializer(serializers.ModelSerializer):
@@ -167,3 +168,43 @@ class ProductReadSerializer(serializers.ModelSerializer):
             'specification_file',
         )
         model = Product
+
+
+class DealerCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Dealer
+        fields = (
+            'rs_code',
+        )
+
+
+class ShortCatalogSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = (
+            'id',
+            'brand',
+            'name',
+            'part_number',
+            'volume',
+            'price_per_litre',
+            'price_per_box',
+            )
+        model = Catalog
+
+
+class CartSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Cart
+        fields = (
+            'dealer',
+            'product',
+            'count',
+            )
+
+    def to_representation(self, instance):
+        serializer = ShortCatalogSerializer(
+            instance.product, context=self.context
+        )
+        return serializer.data
