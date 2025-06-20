@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django_filters',
 
     'api.apps.ApiConfig',
+    'cart.apps.CartConfig',
     'catalog.apps.CatalogConfig',
     'users.apps.UsersConfig',
 ]
