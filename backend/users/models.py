@@ -4,12 +4,13 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
 from .constants import (
+    CITY_MAX_LENGTH,
     DEALER_NAME_MAX_LENGTH,
     EMAIL_MAX_LENGTH,
     FIRST_NAME_MAX_LENGTH,
     JOB_TITLE_MAX_LENGTH,
     LAST_NAME_MAX_LENGTH,
-    SUPPLIER_ADDRESS_MAX_LENGTH,
+    ADDRESS_MAX_LENGTH,
     SUPPLIER_NAME_MAX_LENGTH,
     USERNAME_MAX_LENGTH
 )
@@ -30,7 +31,18 @@ class Dealer(models.Model):
         verbose_name='Dealer INN',
         validators=(validate_inn,)
     )
-    phone = PhoneNumberField(region='RU', blank=False)
+    city = models.CharField(
+        max_length=CITY_MAX_LENGTH,
+        verbose_name='Dealer city name',
+    )
+    address = models.CharField(
+        max_length=ADDRESS_MAX_LENGTH,
+        verbose_name='Dealer address',
+    )
+    legal_address = models.CharField(
+        max_length=ADDRESS_MAX_LENGTH,
+        verbose_name='Dealer legal address',
+    )
 
     def __str__(self):
         return self.rs_code
@@ -60,11 +72,11 @@ class Supplier(models.Model):
         verbose_name='Contact job title',
     )
     address = models.CharField(
-        max_length=SUPPLIER_ADDRESS_MAX_LENGTH,
+        max_length=ADDRESS_MAX_LENGTH,
         verbose_name='Supplier address',
     )
     legal_address = models.CharField(
-        max_length=SUPPLIER_ADDRESS_MAX_LENGTH,
+        max_length=ADDRESS_MAX_LENGTH,
         verbose_name='Supplier legal address',
     )
 
@@ -90,6 +102,7 @@ class User(AbstractUser):
     last_name = models.CharField(
         max_length=LAST_NAME_MAX_LENGTH,
     )
+    phone = PhoneNumberField(region='RU', blank=False)
     rs_code = models.ForeignKey(
         Dealer,
         on_delete=models.CASCADE,

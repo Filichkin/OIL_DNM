@@ -20,7 +20,14 @@ class UserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         (
             'Custom Fields', {
-                'fields': ('is_distributor', 'is_supplier', 'is_dealer', 'rs_code', 'supplier')
+                'fields': (
+                    'is_distributor',
+                    'is_supplier',
+                    'is_dealer',
+                    'rs_code',
+                    'supplier',
+                    'phone',
+                    )
                 }
             ),
     )
@@ -28,6 +35,7 @@ class UserAdmin(UserAdmin):
         'username',
         'id',
         'email',
+        'phone',
         'first_name',
         'last_name',
         'is_distributor',
@@ -45,7 +53,7 @@ class DealerAdmin(admin.ModelAdmin):
         'rs_code',
         'name',
         'inn',
-        'phone'
+        'legal_address',
     )
 
 
