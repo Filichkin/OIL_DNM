@@ -105,14 +105,14 @@ class User(AbstractUser):
     phone = PhoneNumberField(region='RU', blank=False)
     rs_code = models.ForeignKey(
         Dealer,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name='dealer_users',
         blank=True,
         null=True,
         )
     supplier = models.ForeignKey(
         Supplier,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name='supplier_users',
         blank=True,
         null=True,
