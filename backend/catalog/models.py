@@ -11,7 +11,6 @@ from .constants import (
     PRODUCT_NAME_MAX_LENGTH,
     VOLUME_LITRES_MIN
 )
-from users.constants import SUPPLIER_NAME_MAX_LENGTH
 from users.models import Supplier
 
 
