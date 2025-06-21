@@ -1,5 +1,4 @@
 from django.db.models import OuterRef, Subquery
-from django.db.utils import IntegrityError
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
@@ -8,7 +7,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from api.catalog.serializers import (
-    CartSerializer,
+    CartCreateSerializer,
     CatalogCreateSerializer,
     CatalogReadSerializer,
     ProductReadSerializer,
@@ -53,7 +52,7 @@ class CatalogViewSet(viewsets.ModelViewSet):
         return CatalogReadSerializer
 
     @staticmethod
-    def add_to(serializer_class, request, dealer_id, product_id):
+    def add_to(serializer_class, request, product_id):
         serializer = serializer_class(
             data={
                 'dealer': request.data.get('dealer', 1),
@@ -79,7 +78,7 @@ class CatalogViewSet(viewsets.ModelViewSet):
         url_path='cart',
         url_name='cart',
     )
-    def cart(self, request, dealer_id=None, pk=None):
+    def cart(self, request, pk=None):
         if request.method == 'POST':
-            return self.add_to(CartSerializer, request, dealer_id, pk)
-        return self.delete_from(Cart, request, dealer_id, pk)
+            return self.add_to(CartCreateSerializer, request, pk)
+        return self.delete_from(Cart, request, pk)

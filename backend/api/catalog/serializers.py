@@ -193,14 +193,10 @@ class ShortCatalogSerializer(serializers.ModelSerializer):
         model = Catalog
 
 
-class CartSerializer(serializers.ModelSerializer):
+class CartCreateSerializer(serializers.ModelSerializer):
     dealer = serializers.PrimaryKeyRelatedField(
         queryset=Dealer.objects.all(),
         label='Dealers',
-    )
-    dealer = serializers.PrimaryKeyRelatedField(
-        queryset=Catalog.objects.all(),
-        label='Products',
     )
 
     class Meta:
