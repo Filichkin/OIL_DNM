@@ -16,7 +16,7 @@ class Cart(models.Model):
     product = models.ForeignKey(
         Catalog,
         on_delete=models.CASCADE,
-        verbose_name='prodect_orders',
+        verbose_name='Product_orders',
     )
     count = models.PositiveSmallIntegerField(
         verbose_name='Count',

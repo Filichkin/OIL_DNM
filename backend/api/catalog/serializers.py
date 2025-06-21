@@ -194,6 +194,14 @@ class ShortCatalogSerializer(serializers.ModelSerializer):
 
 
 class CartSerializer(serializers.ModelSerializer):
+    dealer = serializers.PrimaryKeyRelatedField(
+        queryset=Dealer.objects.all(),
+        label='Dealers',
+    )
+    dealer = serializers.PrimaryKeyRelatedField(
+        queryset=Catalog.objects.all(),
+        label='Products',
+    )
 
     class Meta:
         model = Cart
@@ -202,9 +210,3 @@ class CartSerializer(serializers.ModelSerializer):
             'product',
             'count',
             )
-
-    def to_representation(self, instance):
-        serializer = ShortCatalogSerializer(
-            instance.product, context=self.context
-        )
-        return serializer.data

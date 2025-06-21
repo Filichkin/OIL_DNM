@@ -56,7 +56,7 @@ class CatalogViewSet(viewsets.ModelViewSet):
     def add_to(serializer_class, request, dealer_id, product_id):
         serializer = serializer_class(
             data={
-                'dealer': dealer_id,
+                'dealer': request.data.get('dealer', 1),
                 'product': product_id,
                 'count': request.data.get('count', 1)
                 },
