@@ -204,3 +204,16 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             'count'
             )
         read_only_fields = ('id',)
+
+
+class CartItemSerializer(serializers.Serializer):
+    #product_id = serializers.IntegerField()
+    count = serializers.IntegerField(min_value=1)
+
+
+class CartContentSerializer(serializers.Serializer):
+    product_id = serializers.IntegerField()
+    product_name = serializers.CharField(max_length=255)
+    quantity = serializers.IntegerField(min_value=1)
+    price_per_box = serializers.DecimalField(max_digits=10, decimal_places=2)
+    total_price = serializers.DecimalField(max_digits=10, decimal_places=2)

@@ -1,6 +1,8 @@
 from django.db.models import OuterRef, Subquery
+from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
@@ -11,9 +13,11 @@ from api.catalog.serializers import (
     CatalogCreateSerializer,
     CatalogReadSerializer,
     ProductReadSerializer,
-    ProductCreateSerializer
+    ProductCreateSerializer,
+    CartItemSerializer
 )
 from api.permissions import IsDistributorOrReadOnly
+from cart.cart import Cart
 from cart.models import OrderList
 from catalog.models import Catalog, Product
 
@@ -48,7 +52,7 @@ class CatalogViewSet(viewsets.ModelViewSet):
         if self.action in {'create', 'partial_update'}:
             return CatalogCreateSerializer
         elif self.action == 'cart':
-            return OrderCreateSerializer
+            return CartItemSerializer
         return CatalogReadSerializer
 
     @staticmethod
@@ -78,7 +82,22 @@ class CatalogViewSet(viewsets.ModelViewSet):
         url_path='cart',
         url_name='cart',
     )
-    def cart(self, request, pk=None):
+    def cart(self, request, pk):
+        product = get_object_or_404(Catalog, pk=pk)
         if request.method == 'POST':
-            return self.add_to(OrderCreateSerializer, request, pk)
-        return self.delete_from(OrderList, request, pk)
+            serializer = CartItemSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            cart = Cart(request)
+            try:
+                cart.add(
+                    product=product,
+                    count=serializer.validated_data["count"],
+                )
+                return Response(
+                    {"message": "Item added to cart"}, status=status.HTTP_201_CREATED
+                )
+            except NotFound:
+                return Response(
+                    {"product_id": "Product ID not found"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
