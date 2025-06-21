@@ -8,7 +8,11 @@ from api.users.views import (
     SupplierViewSet,
     UserViewSet
 )
-from api.catalog.views import CatalogViewSet, ProductViewSet
+from api.catalog.views import (
+    CatalogViewSet,
+    CartView,
+    ProductViewSet
+)
 
 
 app_name = 'api'
@@ -25,6 +29,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
+    path('cart/', CartView.as_view(), name='cart_list'),
 ]
 
 

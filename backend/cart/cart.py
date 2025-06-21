@@ -23,7 +23,10 @@ class Cart:
         if product_id not in self.cart:
             self.cart[product_id] = {
                 'count': 0,
-                'price': str(product.price_per_box)
+                'price_per_box': str(product.price_per_box),
+                'product_name': str(product.name),
+                'product_id': product_id,
+
             }
         if override_count:
             self.cart[product_id]['count'] = count
@@ -52,6 +55,8 @@ class Cart:
         for product in products:
             cart[str(product.id)]['product'] = product
         for item in cart.values():
+            item['product_id'] = item['product_id']
+            item['product_name'] = item['product_name']
             item['price_per_box'] = Decimal(item['price_per_box'])
             item['total_price'] = item['price_per_box'] * item['count']
             yield item
@@ -71,3 +76,37 @@ class Cart:
         '''Удаление корзины из сеанса'''
         del self.session[settings.CART_SESSION_ID]
         self.save
+
+    def get_cart_items(self):
+        return self
+
+    def get_cart_items_list(self) -> list:
+        # Return cart items in a structured format for API serialization
+        items = []
+        for product_id, item in self.cart.items():
+            get_item = self.get_item(product_id=product_id, item=item)
+            if get_item is None:
+                continue
+            items.append(get_item)
+
+        return items
+
+    def get_item(self, product_id: int, item=None) -> dict:
+        item = item or self.cart.get(str(product_id))
+        if item is None:
+            return None
+        try:
+            product = Catalog.objects.get(id=int(product_id))
+            item_data = {
+                'product_id': product_id,
+                'product_name': product.name,
+                'count': item['count'],
+                'price': str(item['price']),
+                'total_price': str(
+                    Decimal(item['price_per_box']) * int(item['count'])
+                    ),
+            }
+            return item_data
+        except Catalog.DoesNotExist:
+            pass
+        return None

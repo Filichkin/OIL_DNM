@@ -2,23 +2,23 @@ from django.db.models import OuterRef, Subquery
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError, NotFound
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from api.catalog.serializers import (
-    OrderCreateSerializer,
+    CartContentSerializer,
+    CartItemSerializer,
     CatalogCreateSerializer,
     CatalogReadSerializer,
     ProductReadSerializer,
     ProductCreateSerializer,
-    CartItemSerializer
 )
 from api.permissions import IsDistributorOrReadOnly
 from cart.cart import Cart
-from cart.models import OrderList
 from catalog.models import Catalog, Product
 
 
@@ -55,29 +55,9 @@ class CatalogViewSet(viewsets.ModelViewSet):
             return CartItemSerializer
         return CatalogReadSerializer
 
-    @staticmethod
-    def add_to(serializer_class, request, id):
-        serializer = serializer_class(
-            data={
-                'dealer': request.data.get('dealer', 1),
-                'product': id,
-                'count': request.data.get('count', 1),
-                },
-            context={'request': request},
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    @staticmethod
-    def delete_from(model, request, id):
-        obj = model.objects.filter(dealer=request.dealer, product__id=id)
-        obj.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
     @action(
         detail=True,
-        methods=['POST', 'DELETE'],
+        methods=['POST'],
         permission_classes=[AllowAny],
         url_path='cart',
         url_name='cart',
@@ -91,13 +71,57 @@ class CatalogViewSet(viewsets.ModelViewSet):
             try:
                 cart.add(
                     product=product,
-                    count=serializer.validated_data["count"],
+                    count=serializer.validated_data['count'],
                 )
                 return Response(
-                    {"message": "Item added to cart"}, status=status.HTTP_201_CREATED
+                    {
+                        'message': 'Item added to cart'
+                        },
+                    status=status.HTTP_201_CREATED
                 )
             except NotFound:
                 return Response(
-                    {"product_id": "Product ID not found"},
+                    {'product_id': 'Product ID not found'},
                     status=status.HTTP_404_NOT_FOUND,
                 )
+
+
+class CartView(APIView):
+    permission_classes = (AllowAny,)
+    serializer_class = CartContentSerializer
+
+    def get(self, request, *args, **kwargs):
+
+        query_params = request.query_params
+        print(query_params)
+
+        # Validate allowed parameters
+        allowed_params = {'count', 'items', 'total_price'}
+        invalid_params = set(query_params.keys()) - allowed_params
+        if invalid_params:
+            raise ValidationError(
+                {
+                    'error': f"Invalid query parameters: "
+                             f"{', '.join(invalid_params)}"
+                    }
+            )
+        get_total_count = 'count' in query_params
+        get_total_items = 'items' in query_params
+        get_total_price = 'total_price' in query_params
+
+        cart = Cart(request)
+
+        if get_total_count:
+            return Response({'total_count': len(cart)}, status=206)
+
+        cart_items = cart.get_cart_items()
+        print(cart_items)
+
+        if get_total_items:
+            return Response({'cart_items': len(cart_items)}, status=206)
+
+        if get_total_price:
+            return Response({'total_price': cart.get_total_price}, status=201)
+
+        serializer = CartContentSerializer(cart, many=True)
+        return Response(serializer.data)
