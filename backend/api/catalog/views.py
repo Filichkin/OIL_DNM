@@ -7,14 +7,14 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from api.catalog.serializers import (
-    CartCreateSerializer,
+    OrderCreateSerializer,
     CatalogCreateSerializer,
     CatalogReadSerializer,
     ProductReadSerializer,
     ProductCreateSerializer
 )
 from api.permissions import IsDistributorOrReadOnly
-from cart.models import Cart
+from cart.models import OrderList
 from catalog.models import Catalog, Product
 
 
@@ -48,16 +48,16 @@ class CatalogViewSet(viewsets.ModelViewSet):
         if self.action in {'create', 'partial_update'}:
             return CatalogCreateSerializer
         elif self.action == 'cart':
-            return CartSerializer
+            return OrderCreateSerializer
         return CatalogReadSerializer
 
     @staticmethod
-    def add_to(serializer_class, request, product_id):
+    def add_to(serializer_class, request, id):
         serializer = serializer_class(
             data={
                 'dealer': request.data.get('dealer', 1),
-                'product': product_id,
-                'count': request.data.get('count', 1)
+                'product': id,
+                'count': request.data.get('count', 1),
                 },
             context={'request': request},
         )
@@ -66,8 +66,8 @@ class CatalogViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @staticmethod
-    def delete_from(model, request, dealer_id, product_id):
-        obj = model.objects.get(product=product_id, dealer=dealer_id)
+    def delete_from(model, request, id):
+        obj = model.objects.filter(dealer=request.dealer, product__id=id)
         obj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -80,5 +80,5 @@ class CatalogViewSet(viewsets.ModelViewSet):
     )
     def cart(self, request, pk=None):
         if request.method == 'POST':
-            return self.add_to(CartCreateSerializer, request, pk)
-        return self.delete_from(Cart, request, pk)
+            return self.add_to(OrderCreateSerializer, request, pk)
+        return self.delete_from(OrderList, request, pk)

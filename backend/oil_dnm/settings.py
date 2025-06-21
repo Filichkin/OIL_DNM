@@ -164,3 +164,5 @@ SWAGGER_SETTINGS = {
         'patch'
     ],
 }
+
+CART_SESSION_ID = 'cart'

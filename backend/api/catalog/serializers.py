@@ -1,7 +1,7 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
-from cart.models import Cart
+from cart.models import OrderList
 from catalog.models import Brand, Catalog, Product, ProductImages
 from users.models import Dealer, Supplier
 
@@ -170,39 +170,37 @@ class ProductReadSerializer(serializers.ModelSerializer):
         model = Product
 
 
-class DealerCodeSerializer(serializers.ModelSerializer):
+class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Dealer
-        fields = (
-            'rs_code',
-        )
-
-
-class ShortCatalogSerializer(serializers.ModelSerializer):
-
-    class Meta:
+        model = OrderList
         fields = (
             'id',
-            'brand',
-            'name',
-            'part_number',
-            'volume',
-            'price_per_litre',
-            'price_per_box',
-            )
-        model = Catalog
-
-
-class CartCreateSerializer(serializers.ModelSerializer):
-    dealer = serializers.PrimaryKeyRelatedField(
-        queryset=Dealer.objects.all(),
-        label='Dealers',
-    )
-
-    class Meta:
-        model = Cart
-        fields = (
-            'dealer',
+            'order',
             'product',
             'count',
+            'created_at',
+            'updated_at'
             )
+        read_only_fields = ('id', 'created_at', 'updated_at')
+
+
+class OrderCreateSerializer(serializers.ModelSerializer):
+    dealer = serializers.PrimaryKeyRelatedField(
+        queryset=Dealer.objects.all(),
+        label='Dealer'
+    )
+    product = serializers.PrimaryKeyRelatedField(
+        queryset=Catalog.objects.all(),
+        label='Products'
+    )
+    count = serializers.IntegerField()
+
+    class Meta:
+        model = OrderList
+        fields = (
+            'id',
+            'dealer',
+            'product',
+            'count'
+            )
+        read_only_fields = ('id',)
