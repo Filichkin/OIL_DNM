@@ -20,20 +20,37 @@ class Cart:
         или обновление его количества
         '''
         product_id = str(product.id)
+        dealer = str(dealer)
         if product_id not in self.cart:
             self.cart[product_id] = {
                 'count': 0,
                 'price_per_box': str(product.price_per_box),
                 'product_name': str(product.name),
                 'product_id': product_id,
-                'dealer': str(dealer),
+                'dealer': dealer,
 
             }
-        if override_count:
-            self.cart[product_id]['count'] = count
+        if self.cart[product_id]['dealer'] == dealer:
+            if override_count:
+                self.cart[product_id]['count'] = count
+            else:
+                self.cart[product_id]['count'] += count
+            self.save()
         else:
-            self.cart[product_id]['count'] += count
-        self.save()
+            self.cart[product_id] = {
+                'count': 0,
+                'price_per_box': str(product.price_per_box),
+                'product_name': str(product.name),
+                'product_id': product_id,
+                'dealer': dealer,
+
+            }
+            if self.cart[product_id]['dealer'] == dealer:
+                if override_count:
+                    self.cart[product_id]['count'] = count
+                else:
+                    self.cart[product_id]['count'] += count
+                self.save()
 
     def save(self):
         self.session.modified = True

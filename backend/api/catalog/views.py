@@ -12,6 +12,7 @@ from rest_framework.views import APIView
 from api.catalog.serializers import (
     CartContentSerializer,
     CartItemSerializer,
+    CartItemDealerSerializer,
     CatalogCreateSerializer,
     CatalogReadSerializer,
     ProductReadSerializer,
@@ -67,9 +68,28 @@ class CatalogViewSet(viewsets.ModelViewSet):
     )
     def cart(self, request, pk):
         product = get_object_or_404(Catalog, pk=pk)
-        #request.data['dealer'] = 105
-        #print(request.data)
-        #if request.user.is_dealer:
+        if request.user.is_dealer:
+            request.data['dealer'] = request.user.rs_code.id
+            serializer = CartItemSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            cart = Cart(request)
+            try:
+                cart.add(
+                    product=product,
+                    count=serializer.validated_data['count'],
+                    dealer=serializer.validated_data['dealer'],
+                )
+                return Response(
+                    {
+                        'message': 'Item added to cart'
+                        },
+                    status=status.HTTP_201_CREATED
+                )
+            except NotFound:
+                return Response(
+                    {'product_id': 'Product ID not found'},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
         serializer = CartItemSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         cart = Cart(request)
@@ -104,7 +124,6 @@ class CartView(APIView):
     def get(self, request, *args, **kwargs):
 
         query_params = request.query_params
-        print(query_params)
 
         # Validate allowed parameters
         allowed_params = {'count', 'items', 'total_price'}
@@ -126,8 +145,6 @@ class CartView(APIView):
             return Response({'total_count': len(cart)}, status=206)
 
         cart_items = cart.get_cart_items()
-        for item in cart_items:
-            print(item)
 
         if get_total_items:
             return Response({'cart_items': len(cart_items)}, status=206)
