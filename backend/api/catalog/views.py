@@ -90,6 +90,11 @@ class CartView(APIView):
     permission_classes = (AllowAny,)
     serializer_class = CartContentSerializer
 
+    def post(self, request, *args, **kwargs):
+        cart = Cart(request)
+        cart.clear()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     def get(self, request, *args, **kwargs):
 
         query_params = request.query_params
