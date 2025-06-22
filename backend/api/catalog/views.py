@@ -17,7 +17,10 @@ from api.catalog.serializers import (
     ProductReadSerializer,
     ProductCreateSerializer,
 )
-from api.permissions import IsDistributorOrReadOnly
+from api.permissions import (
+    IsDistributorOrDealer,
+    IsDistributorOrReadOnly
+)
 from cart.cart import Cart
 from catalog.models import Catalog, Product
 
@@ -58,7 +61,7 @@ class CatalogViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=['POST'],
-        permission_classes=[AllowAny],
+        permission_classes=[IsDistributorOrDealer],
         url_path='cart',
         url_name='cart',
     )
@@ -87,7 +90,7 @@ class CatalogViewSet(viewsets.ModelViewSet):
 
 
 class CartView(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsDistributorOrDealer,)
     serializer_class = CartContentSerializer
 
     def post(self, request, *args, **kwargs):
@@ -120,7 +123,8 @@ class CartView(APIView):
             return Response({'total_count': len(cart)}, status=206)
 
         cart_items = cart.get_cart_items()
-        print(cart_items)
+        for item in cart_items:
+            print(item)
 
         if get_total_items:
             return Response({'cart_items': len(cart_items)}, status=206)

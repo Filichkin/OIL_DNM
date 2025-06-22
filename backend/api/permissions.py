@@ -29,3 +29,12 @@ class IsDistributorOrReadOnly(permissions.BasePermission):
                 )
             or (request.user.is_authenticated and request.user.is_distributor)
         )
+
+
+class IsDistributorOrDealer(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        return (
+            (request.user.is_authenticated and request.user.is_distributor)
+            or (request.user.is_authenticated and request.user.is_dealer)
+        )
