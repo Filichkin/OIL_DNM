@@ -67,27 +67,29 @@ class CatalogViewSet(viewsets.ModelViewSet):
     )
     def cart(self, request, pk):
         product = get_object_or_404(Catalog, pk=pk)
-        if request.method == 'POST':
-            serializer = CartItemSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            cart = Cart(request)
-            try:
-                cart.add(
-                    product=product,
-                    count=serializer.validated_data['count'],
-                    dealer=serializer.validated_data['dealer'],
-                )
-                return Response(
-                    {
-                        'message': 'Item added to cart'
-                        },
-                    status=status.HTTP_201_CREATED
-                )
-            except NotFound:
-                return Response(
-                    {'product_id': 'Product ID not found'},
-                    status=status.HTTP_404_NOT_FOUND,
-                )
+        #request.data['dealer'] = 105
+        #print(request.data)
+        #if request.user.is_dealer:
+        serializer = CartItemSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        cart = Cart(request)
+        try:
+            cart.add(
+                product=product,
+                count=serializer.validated_data['count'],
+                dealer=serializer.validated_data['dealer'],
+            )
+            return Response(
+                {
+                    'message': 'Item added to cart'
+                    },
+                status=status.HTTP_201_CREATED
+            )
+        except NotFound:
+            return Response(
+                {'product_id': 'Product ID not found'},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
 
 class CartView(APIView):

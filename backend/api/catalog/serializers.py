@@ -214,6 +214,10 @@ class CartItemSerializer(serializers.Serializer):
     )
 
 
+class CartItemDealerSerializer(serializers.Serializer):
+    count = serializers.IntegerField(min_value=1)
+
+
 class CartContentSerializer(serializers.Serializer):
     dealer = serializers.ReadOnlyField()
     product_id = serializers.IntegerField()
