@@ -14,7 +14,7 @@ class Cart:
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
 
-    def add(self, product, count=1, override_count=False):
+    def add(self, product, dealer, count=1, override_count=False):
         '''
         Добавление товара в корзину
         или обновление его количества
@@ -26,6 +26,7 @@ class Cart:
                 'price_per_box': str(product.price_per_box),
                 'product_name': str(product.name),
                 'product_id': product_id,
+                'dealer': str(dealer),
 
             }
         if override_count:
@@ -55,6 +56,7 @@ class Cart:
         for product in products:
             cart[str(product.id)]['product'] = product
         for item in cart.values():
+            item['dealer'] = item['dealer']
             item['product_id'] = item['product_id']
             item['product_name'] = item['product_name']
             item['price_per_box'] = Decimal(item['price_per_box'])

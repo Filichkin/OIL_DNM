@@ -75,6 +75,7 @@ class CatalogViewSet(viewsets.ModelViewSet):
                 cart.add(
                     product=product,
                     count=serializer.validated_data['count'],
+                    dealer=serializer.validated_data['dealer'],
                 )
                 return Response(
                     {

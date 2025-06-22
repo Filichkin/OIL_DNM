@@ -208,9 +208,14 @@ class OrderCreateSerializer(serializers.ModelSerializer):
 
 class CartItemSerializer(serializers.Serializer):
     count = serializers.IntegerField(min_value=1)
+    dealer = serializers.PrimaryKeyRelatedField(
+        queryset=Dealer.objects.all(),
+        label='Dealer'
+    )
 
 
 class CartContentSerializer(serializers.Serializer):
+    dealer = serializers.ReadOnlyField()
     product_id = serializers.IntegerField()
     product_name = serializers.CharField(max_length=255)
     count = serializers.IntegerField(min_value=1)
