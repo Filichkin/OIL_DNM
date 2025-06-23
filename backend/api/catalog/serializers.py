@@ -214,8 +214,12 @@ class CartItemSerializer(serializers.Serializer):
     )
 
 
-class CartItemDealerSerializer(serializers.Serializer):
-    count = serializers.IntegerField(min_value=1)
+class CartItemDeleteSerializer(serializers.Serializer):
+    product_id = serializers.IntegerField()
+    dealer = serializers.PrimaryKeyRelatedField(
+        queryset=Dealer.objects.all(),
+        label='Dealer'
+    )
 
 
 class CartContentSerializer(serializers.Serializer):
