@@ -7,7 +7,7 @@ from catalog.models import Catalog
 
 class Cart:
     def __init__(self, request):
-        '''Создание корзины'''
+
         self.session = request.session
         cart = self.session.get(settings.CART_SESSION_ID)
         if not cart:
@@ -15,14 +15,13 @@ class Cart:
         self.cart = cart
 
     def add(self, product, dealer, count=1, override_count=False):
-        '''
-        Добавление товара в корзину
-        или обновление его количества
-        '''
+
         product_id = str(product.id)
         dealer = str(dealer)
-        if product_id not in self.cart:
-            self.cart[product_id] = {
+        if dealer not in self.cart:
+            self.cart[dealer] = {}
+        if product_id not in self.cart[dealer]:
+            self.cart[dealer][product_id] = {
                 'count': 0,
                 'price_per_box': str(product.price_per_box),
                 'product_name': str(product.name),
@@ -30,9 +29,9 @@ class Cart:
                 'dealer': dealer,
                 }
         if override_count:
-            self.cart[product_id]['count'] = count
+            self.cart[dealer][product_id]['count'] = count
         else:
-            self.cart[product_id]['count'] += count
+            self.cart[dealer][product_id]['count'] += count
         self.save()
         print(self.cart)
 
@@ -40,29 +39,28 @@ class Cart:
         self.session.modified = True
 
     def remove(self, product):
-        '''Удаление товара из корзины'''
+
         product_id = str(product.id)
         if product_id in self.cart:
             del self.cart[product_id]
             self.save()
 
     def __iter__(self):
-        '''
-        Прокрутка товаров корзине и
-        получение товаров из базы данных
-        '''
-        product_ids = self.cart.keys()
-        products = Catalog.objects.filter(id__in=product_ids)
         cart = self.cart.copy()
-        for product in products:
-            cart[str(product.id)]['product'] = product
-        for item in cart.values():
-            item['dealer'] = item['dealer']
-            item['product_id'] = item['product_id']
-            item['product_name'] = item['product_name']
-            item['price_per_box'] = Decimal(item['price_per_box'])
-            item['total_price'] = item['price_per_box'] * item['count']
-            yield item
+        for dealer in self.cart.keys():
+
+            product_ids = self.cart[dealer].keys()
+            products = Catalog.objects.filter(id__in=product_ids)
+
+            for product in products:
+                cart[dealer][str(product.id)]['product'] = product
+            for item in cart[dealer].values():
+                item['dealer'] = item['dealer']
+                item['product_id'] = item['product_id']
+                item['product_name'] = item['product_name']
+                item['price_per_box'] = Decimal(item['price_per_box'])
+                item['total_price'] = item['price_per_box'] * item['count']
+                yield item
 
     def __len__(self):
         '''Подсчет количества позиций в корзине'''
