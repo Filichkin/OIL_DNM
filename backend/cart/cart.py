@@ -28,29 +28,13 @@ class Cart:
                 'product_name': str(product.name),
                 'product_id': product_id,
                 'dealer': dealer,
-
-            }
-        if self.cart[product_id]['dealer'] == dealer:
-            if override_count:
-                self.cart[product_id]['count'] = count
-            else:
-                self.cart[product_id]['count'] += count
-            self.save()
+                }
+        if override_count:
+            self.cart[product_id]['count'] = count
         else:
-            self.cart[product_id] = {
-                'count': 0,
-                'price_per_box': str(product.price_per_box),
-                'product_name': str(product.name),
-                'product_id': product_id,
-                'dealer': dealer,
-
-            }
-            if self.cart[product_id]['dealer'] == dealer:
-                if override_count:
-                    self.cart[product_id]['count'] = count
-                else:
-                    self.cart[product_id]['count'] += count
-                self.save()
+            self.cart[product_id]['count'] += count
+        self.save()
+        print(self.cart)
 
     def save(self):
         self.session.modified = True
