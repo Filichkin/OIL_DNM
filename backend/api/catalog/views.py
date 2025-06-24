@@ -99,39 +99,12 @@ class CatalogViewSet(viewsets.ModelViewSet):
 
 class CartView(APIView):
     permission_classes = (IsDistributorOrDealer,)
-    #serializer_class = CartContentSerializer
-
-    def get_serializer_class(self):
-        if self.action == 'delete':
-            return CartItemDeleteSerializer
-        elif self.action == 'get':
-            return CartContentSerializer
+    serializer_class = CartContentSerializer
 
     def post(self, request, *args, **kwargs):
         cart = Cart(request)
         cart.clear()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def delete(self, request, *args, **kwargs):
-        serializer = CartItemDeleteSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        cart = Cart(request)
-        try:
-            cart.remove(
-                product_id=serializer.validated_data['product_id'],
-                dealer=serializer.validated_data['dealer'],
-            )
-            return Response(
-                {
-                    'message': 'Item deleted from cart'
-                    },
-                status=status.HTTP_204_NO_CONTENT
-            )
-        except NotFound:
-            return Response(
-                {'product_id': 'Product ID not found'},
-                status=status.HTTP_404_NOT_FOUND,
-            )
 
     def get(self, request, *args, **kwargs):
 
@@ -166,3 +139,24 @@ class CartView(APIView):
 
         serializer = CartContentSerializer(cart, many=True)
         return Response(serializer.data)
+
+    def delete(self, request, *args, **kwargs):
+        serializer = CartItemDeleteSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        cart = Cart(request)
+        try:
+            cart.remove(
+                product_id=serializer.validated_data['product_id'],
+                dealer=serializer.validated_data['dealer'],
+            )
+            return Response(
+                {
+                    'message': 'Item deleted from cart'
+                    },
+                status=status.HTTP_204_NO_CONTENT
+            )
+        except NotFound:
+            return Response(
+                {'product_id': 'Product ID not found'},
+                status=status.HTTP_404_NOT_FOUND,
+            )
