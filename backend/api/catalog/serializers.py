@@ -1,6 +1,7 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
+from api.catalog.constants import DECIMAL_PLACES, MAX_DIGITS
 from cart.models import OrderList
 from catalog.models import Brand, Catalog, Product, ProductImages
 from users.models import Dealer, Supplier
@@ -225,7 +226,16 @@ class CartItemDeleteSerializer(serializers.Serializer):
 class CartContentSerializer(serializers.Serializer):
     dealer = serializers.ReadOnlyField()
     product_id = serializers.IntegerField()
-    product_name = serializers.CharField(max_length=255)
-    count = serializers.IntegerField(min_value=1)
-    price_per_box = serializers.DecimalField(max_digits=10, decimal_places=2)
-    total_price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    product_name = serializers.CharField()
+    brand = serializers.CharField()
+    part_number = serializers.CharField()
+    volume = serializers.CharField()
+    count = serializers.IntegerField()
+    price_per_box = serializers.DecimalField(
+        max_digits=MAX_DIGITS,
+        decimal_places=DECIMAL_PLACES
+        )
+    total_price = serializers.DecimalField(
+        max_digits=MAX_DIGITS,
+        decimal_places=DECIMAL_PLACES
+        )

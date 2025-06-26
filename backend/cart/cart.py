@@ -23,8 +23,11 @@ class Cart:
         if product_id not in self.cart[dealer]:
             self.cart[dealer][product_id] = {
                 'count': 0,
+                'brand': str(product.brand),
                 'price_per_box': str(product.price_per_box),
                 'product_name': str(product.name),
+                'part_number': str(product.part_number),
+                'volume': str(product.volume),
                 'product_id': product_id,
                 'dealer': dealer,
                 }
@@ -33,7 +36,7 @@ class Cart:
         else:
             self.cart[dealer][product_id]['count'] += count
         self.save()
-        print(self.cart)
+        # print(self.cart)
 
     def save(self):
         self.session.modified = True
@@ -59,6 +62,9 @@ class Cart:
                 item['dealer'] = item['dealer']
                 item['product_id'] = item['product_id']
                 item['product_name'] = item['product_name']
+                item['brand'] = item['brand']
+                item['part_number'] = item['part_number']
+                item['volume'] = item['volume']
                 item['price_per_box'] = Decimal(item['price_per_box'])
                 item['total_price'] = item['price_per_box'] * item['count']
                 yield item
