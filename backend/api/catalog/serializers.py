@@ -2,8 +2,8 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from api.catalog.constants import DECIMAL_PLACES, MAX_DIGITS
-from cart.models import OrderList
 from catalog.models import Brand, Catalog, Product, ProductImages
+from orders.models import OrderItem
 from users.models import Dealer, Supplier
 
 
@@ -173,7 +173,7 @@ class ProductReadSerializer(serializers.ModelSerializer):
 
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = OrderList
+        model = OrderItem
         fields = (
             'id',
             'order',
@@ -197,7 +197,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
     count = serializers.IntegerField()
 
     class Meta:
-        model = OrderList
+        model = OrderItem
         fields = (
             'id',
             'dealer',

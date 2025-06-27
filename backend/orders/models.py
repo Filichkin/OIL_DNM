@@ -1,7 +1,11 @@
+from datetime import datetime, timedelta
+
 from django.db import models
 
 from api.catalog.constants import DECIMAL_PLACES, MAX_DIGITS
+from orders.constants import COMMENT_MAX_LENGTH
 from catalog.models import Catalog
+from users.models import Dealer
 
 
 class OrderStatus(models.TextChoices):
@@ -13,9 +17,19 @@ class OrderStatus(models.TextChoices):
 
 
 class Order(models.Model):
-    order_number = models.CharField()
-    dealer_name = models.CharField()
-    rs_code = models.CharField()
+    order_number = models.CharField(
+        verbose_name='Order number',
+        blank=False,
+        null=False,
+        unique=True
+    )
+    rs_code = models.ForeignKey(
+        Dealer,
+        on_delete=models.CASCADE,
+        related_name='orders',
+        blank=False,
+        null=False,
+        )
 
     created = models.DateTimeField(
         auto_now_add=True,
@@ -29,7 +43,12 @@ class Order(models.Model):
         verbose_name='Order status'
     )
     delivery_date = models.DateTimeField()
-    comment = models.CharField()
+    comment = models.CharField(
+        verbose_name='Order comment',
+        blank=False,
+        null=False,
+        max_length=COMMENT_MAX_LENGTH
+    )
 
     class Meta:
         ordering = ['-created']
@@ -43,8 +62,8 @@ class Order(models.Model):
         return f'Order {self.id}'
 
     def save(self, *args, **kwargs):
-        if not self.order_number:
-            self.order_number = str(self.rs_code) + str(self.id)
+        if not self.delivery_date:
+            self.delivery_date = datetime.now() + timedelta(days=3)
         super().save(*args, **kwargs)
 
     def get_total_cost(self):
