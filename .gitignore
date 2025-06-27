@@ -143,3 +143,5 @@ media/
 .DS_Store
 commands.txt
 data/
+
+backend_media/
