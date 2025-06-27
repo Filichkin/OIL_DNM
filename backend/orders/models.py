@@ -42,7 +42,11 @@ class Order(models.Model):
         default=OrderStatus.NEW,
         verbose_name='Order status'
     )
-    delivery_date = models.DateTimeField()
+    delivery_date = models.DateTimeField(
+        verbose_name='Order delivery date',
+        blank=False,
+        null=False,
+    )
     comment = models.CharField(
         verbose_name='Order comment',
         blank=False,
