@@ -5,7 +5,7 @@
 <img src="example.png" width="800" height: auto>
 
 
-## Ресурсы OIL ORDERS DNM (в разработке)
+## Ресурсы API OIL ORDERS DNM (в разработке)
 
 * Ресурс **auth**: аутентификация.
 * Ресурс **users**: пользователи.
