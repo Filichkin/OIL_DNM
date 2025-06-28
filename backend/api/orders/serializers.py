@@ -1,7 +1,25 @@
 from rest_framework import serializers
 
+from catalog.models import Catalog
 from orders.models import Order, OrderItem
 from users.models import Dealer
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    product = serializers.PrimaryKeyRelatedField(
+        queryset=Catalog.objects.all(),
+        label='Product'
+    )
+
+    class Meta:
+        fields = (
+            'id',
+            'order',
+            'product',
+            'price',
+            'count'
+            )
+        model = OrderItem
 
 
 class OrderCreateSerializer(serializers.ModelSerializer):
@@ -10,6 +28,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         label='Dealer'
     )
     comment = serializers.CharField(required=False)
+    products = OrderItemSerializer(many=True, required=True)
 
     class Meta:
         model = Order
@@ -17,12 +36,14 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             'id',
             'rs_code',
             'comment',
+            'products'
             )
 
 
 class OrderReadSerializer(serializers.ModelSerializer):
     rs_code = serializers.ReadOnlyField(source='rs_code.rs_code')
     order_number = serializers.ReadOnlyField()
+    products = OrderItemSerializer(many=True, source='items')
 
     class Meta:
         model = Order
@@ -36,17 +57,3 @@ class OrderReadSerializer(serializers.ModelSerializer):
             'delivery_date',
             'comment',
             )
-
-
-class OrderItemSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderItem
-        fields = (
-            'id',
-            'order',
-            'product',
-            'count',
-            'created_at',
-            'updated_at'
-            )
-        read_only_fields = ('id', 'created_at', 'updated_at')
