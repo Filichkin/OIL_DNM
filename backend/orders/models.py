@@ -19,8 +19,8 @@ class OrderStatus(models.TextChoices):
 class Order(models.Model):
     order_number = models.CharField(
         verbose_name='Order number',
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
         unique=True
     )
     rs_code = models.ForeignKey(
@@ -44,13 +44,13 @@ class Order(models.Model):
     )
     delivery_date = models.DateTimeField(
         verbose_name='Order delivery date',
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
     )
     comment = models.CharField(
         verbose_name='Order comment',
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
         max_length=COMMENT_MAX_LENGTH
     )
 

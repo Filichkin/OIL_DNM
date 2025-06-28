@@ -3,7 +3,6 @@ from rest_framework import serializers
 
 from api.catalog.constants import DECIMAL_PLACES, MAX_DIGITS
 from catalog.models import Brand, Catalog, Product, ProductImages
-from orders.models import OrderItem
 from users.models import Dealer, Supplier
 
 
@@ -169,42 +168,6 @@ class ProductReadSerializer(serializers.ModelSerializer):
             'specification_file',
         )
         model = Product
-
-
-class OrderItemSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderItem
-        fields = (
-            'id',
-            'order',
-            'product',
-            'count',
-            'created_at',
-            'updated_at'
-            )
-        read_only_fields = ('id', 'created_at', 'updated_at')
-
-
-class OrderCreateSerializer(serializers.ModelSerializer):
-    dealer = serializers.PrimaryKeyRelatedField(
-        queryset=Dealer.objects.all(),
-        label='Dealer'
-    )
-    product = serializers.PrimaryKeyRelatedField(
-        queryset=Catalog.objects.all(),
-        label='Products'
-    )
-    count = serializers.IntegerField()
-
-    class Meta:
-        model = OrderItem
-        fields = (
-            'id',
-            'dealer',
-            'product',
-            'count'
-            )
-        read_only_fields = ('id',)
 
 
 class CartItemSerializer(serializers.Serializer):
