@@ -8,13 +8,13 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'order_number',
-        'rs_code',
+        'dealer',
         'created',
         'status',
         'delivery_date',
         'comment'
         )
-    search_fields = ('order_number', 'rs_code',)
+    search_fields = ('order_number', 'dealer',)
 
 
 @admin.register(OrderItem)

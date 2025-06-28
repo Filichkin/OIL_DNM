@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from cart.cart import Cart
@@ -25,7 +26,8 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class OrderCreateSerializer(serializers.ModelSerializer):
     rs_code = serializers.PrimaryKeyRelatedField(
         queryset=Dealer.objects.all(),
-        label='Dealer'
+        label='Dealer',
+        required=False
     )
     comment = serializers.CharField(required=False)
 
@@ -33,18 +35,22 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         model = Order
         fields = (
             'id',
-            'rs_code',
+            'dealer',
             'comment',
             )
         read_only_fields = ('product',)
 
     def create(self, validated_data):
         request = self.context.get('request')
+        if request.user.is_dealer:
+            rs_code = request.user.rs_code.id
+            dealer = get_object_or_404(Dealer, pk=rs_code)
+        else:
+            dealer = validated_data.pop('rs_code')
         cart = Cart(request)
-        rs_code = validated_data.pop('rs_code')
         comment = validated_data.pop('comment')
         order = Order.objects.create(
-            rs_code=rs_code,
+            dealer=dealer,
             comment=comment
         )
         for item in cart:
@@ -59,7 +65,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
 
 
 class OrderReadSerializer(serializers.ModelSerializer):
-    rs_code = serializers.ReadOnlyField(source='rs_code.rs_code')
+    rs_code = serializers.ReadOnlyField(source='dealer.rs_code')
     order_number = serializers.ReadOnlyField()
     products = OrderItemSerializer(many=True, source='items')
 

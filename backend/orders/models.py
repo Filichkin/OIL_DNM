@@ -23,7 +23,7 @@ class Order(models.Model):
         null=True,
         unique=True
     )
-    rs_code = models.ForeignKey(
+    dealer = models.ForeignKey(
         Dealer,
         on_delete=models.CASCADE,
         related_name='orders',
