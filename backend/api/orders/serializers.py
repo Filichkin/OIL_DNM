@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from cart.cart import Cart
 from catalog.models import Catalog
 from orders.models import Order, OrderItem
 from users.models import Dealer
@@ -13,7 +14,6 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = (
-            'id',
             'order',
             'product',
             'price',
@@ -28,7 +28,6 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         label='Dealer'
     )
     comment = serializers.CharField(required=False)
-    products = OrderItemSerializer(many=True, required=True)
 
     class Meta:
         model = Order
@@ -36,8 +35,27 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             'id',
             'rs_code',
             'comment',
-            'products'
             )
+        read_only_fields = ('product',)
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        cart = Cart(request)
+        rs_code = validated_data.pop('rs_code')
+        comment = validated_data.pop('comment')
+        order = Order.objects.create(
+            rs_code=rs_code,
+            comment=comment
+        )
+        for item in cart:
+            OrderItem.objects.create(
+                order=order,
+                product=item['product'],
+                price=item['price_per_box'],
+                count=item['count']
+            )
+        cart.clear()
+        return order
 
 
 class OrderReadSerializer(serializers.ModelSerializer):
@@ -49,8 +67,9 @@ class OrderReadSerializer(serializers.ModelSerializer):
         model = Order
         fields = (
             'id',
-            'order_number'
+            'order_number',
             'rs_code',
+            'products',
             'status',
             'created',
             'updated',
