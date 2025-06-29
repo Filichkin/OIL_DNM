@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 from django.db import models
+from django.utils.timezone import get_current_timezone
 
 from api.catalog.constants import DECIMAL_PLACES, MAX_DIGITS
 from orders.constants import COMMENT_MAX_LENGTH
@@ -67,7 +68,9 @@ class Order(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.delivery_date:
-            self.delivery_date = datetime.now() + timedelta(days=3)
+            self.delivery_date = (
+                datetime.now(tz=get_current_timezone()) + timedelta(days=3)
+                )
         super().save(*args, **kwargs)
 
     def get_total_cost(self):
