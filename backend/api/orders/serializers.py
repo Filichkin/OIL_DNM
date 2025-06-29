@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
+from api.orders.utils import generate_order_number
 from cart.cart import Cart
 from catalog.models import Catalog
 from orders.models import Order, OrderItem
@@ -35,7 +36,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         model = Order
         fields = (
             'id',
-            'dealer',
+            'rs_code',
             'comment',
             )
         read_only_fields = ('product',)
@@ -53,6 +54,8 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             dealer=dealer,
             comment=comment
         )
+        order_number = generate_order_number(dealer)
+        print(order_number)
         for item in cart:
             OrderItem.objects.create(
                 order=order,
