@@ -55,6 +55,8 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             comment=comment
         )
         order_number = generate_order_number(dealer)
+        order.order_number = order_number
+        order.save()
         print(order_number)
         for item in cart:
             OrderItem.objects.create(
