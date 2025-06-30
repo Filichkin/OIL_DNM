@@ -41,6 +41,15 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             )
         read_only_fields = ('product',)
 
+    @staticmethod
+    def create_order_item(order, item):
+        return OrderItem.objects.create(
+            order=order,
+            product=item['product'],
+            price=item['price_per_box'],
+            count=item['count']
+            )
+
     def create(self, validated_data):
         request = self.context.get('request')
         if request.user.is_dealer:
@@ -64,22 +73,12 @@ class OrderCreateSerializer(serializers.ModelSerializer):
                 order_number_automarket = generate_order_number(dealer, 'A')
                 order_automarket.order_number = order_number_automarket
                 order_automarket.save()
-                OrderItem.objects.create(
-                    order=order_automarket,
-                    product=item['product'],
-                    price=item['price_per_box'],
-                    count=item['count']
-                )
+                self.create_order_item(order_automarket, item)
             if item['brand'] == 'Lemarc':
                 order_number_lemarc = generate_order_number(dealer, 'L')
                 order_lemarc.order_number = order_number_lemarc
                 order_lemarc.save()
-                OrderItem.objects.create(
-                    order=order_lemarc,
-                    product=item['product'],
-                    price=item['price_per_box'],
-                    count=item['count']
-                )
+                self.create_order_item(order_lemarc, item)
         cart.clear()
         if order_number_lemarc is None:
             order_lemarc.delete()
