@@ -65,6 +65,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         )
         order_lemarc = Order.objects.create(
             dealer=dealer,
+            comment=comment
         )
         order_number_automarket = None
         order_number_lemarc = None
