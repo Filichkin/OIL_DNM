@@ -50,23 +50,44 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             dealer = validated_data.pop('rs_code')
         cart = Cart(request)
         comment = validated_data.pop('comment')
-        order = Order.objects.create(
+        order_automarket = Order.objects.create(
             dealer=dealer,
             comment=comment
         )
-        order_number_automarket = generate_order_number(dealer, 'A')
-        order_number_lemarc = generate_order_number(dealer, 'L')
-        order.order_number = order_number_automarket
-        order.save()
+        order_lemarc = Order.objects.create(
+            dealer=dealer,
+        )
+        order_number_automarket = None
+        order_number_lemarc = None
         for item in cart:
-            OrderItem.objects.create(
-                order=order,
-                product=item['product'],
-                price=item['price_per_box'],
-                count=item['count']
-            )
+            if item['brand'] == 'S-Oil':
+                order_number_automarket = generate_order_number(dealer, 'A')
+                order_automarket.order_number = order_number_automarket
+                order_automarket.save()
+                OrderItem.objects.create(
+                    order=order_automarket,
+                    product=item['product'],
+                    price=item['price_per_box'],
+                    count=item['count']
+                )
+            if item['brand'] == 'Lemarc':
+                order_number_lemarc = generate_order_number(dealer, 'L')
+                order_lemarc.order_number = order_number_lemarc
+                order_lemarc.save()
+                OrderItem.objects.create(
+                    order=order_lemarc,
+                    product=item['product'],
+                    price=item['price_per_box'],
+                    count=item['count']
+                )
         cart.clear()
-        return order
+        if order_number_lemarc is None:
+            order_lemarc.delete()
+            return order_automarket
+        elif order_number_automarket is None:
+            order_automarket.delete()
+            return order_lemarc
+        return order_automarket, order_lemarc
 
 
 class OrderReadSerializer(serializers.ModelSerializer):
