@@ -22,6 +22,20 @@ class UserSerializer(serializers.ModelSerializer):
             'is_distributor',
             'is_supplier',
             'is_dealer',
+            'is_dealer_admin'
+        )
+
+
+class UserDealerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'username',
+            'email',
+            'phone',
+            'first_name',
+            'last_name',
+            'is_dealer_admin'
         )
 
 
@@ -40,7 +54,7 @@ class DealerCreateSerializer(serializers.ModelSerializer):
 
 
 class DealerReadSerializer(serializers.ModelSerializer):
-    users = UserSerializer(
+    users = UserDealerSerializer(
         read_only=True,
         many=True,
         source='dealer_users'
