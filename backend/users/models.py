@@ -44,6 +44,11 @@ class Dealer(models.Model):
         verbose_name='Dealer legal address',
     )
 
+    class Meta:
+        verbose_name = 'Dealer'
+        verbose_name_plural = 'Dealers'
+        ordering = ['id']
+
     def __str__(self):
         return self.rs_code
 
@@ -79,6 +84,11 @@ class Supplier(models.Model):
         max_length=ADDRESS_MAX_LENGTH,
         verbose_name='Supplier legal address',
     )
+
+    class Meta:
+        verbose_name = 'Supplier'
+        verbose_name_plural = 'Suppliers'
+        ordering = ['id']
 
     def __str__(self):
         return self.name
