@@ -32,7 +32,7 @@ class UserViewSet(UserViewSet):
 
 
 class DealerViewSet(viewsets.ModelViewSet):
-    queryset = Dealer.objects.all().order_by('id')
+    queryset = Dealer.objects.all()
     permission_classes = (IsDistributor,)
     pagination_class = PageNumberPagination
     filter_backends = (SearchFilter,)
@@ -46,7 +46,7 @@ class DealerViewSet(viewsets.ModelViewSet):
 
 
 class SupplierViewSet(viewsets.ModelViewSet):
-    queryset = Supplier.objects.all().order_by('id')
+    queryset = Supplier.objects.all()
     permission_classes = (IsDistributor,)
     pagination_class = PageNumberPagination
     filter_backends = (SearchFilter,)
