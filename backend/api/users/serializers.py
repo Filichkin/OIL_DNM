@@ -59,6 +59,7 @@ class DealerReadSerializer(serializers.ModelSerializer):
         many=True,
         source='dealer_users'
         )
+    dealer_admin = serializers.SerializerMethodField()
 
     class Meta:
         model = Dealer
@@ -70,7 +71,13 @@ class DealerReadSerializer(serializers.ModelSerializer):
             'address',
             'legal_address',
             'users',
+            'dealer_admin',
         )
+
+    def get_dealer_admin(self, obj):
+        dealer_admin = obj.dealer_users.filter(is_dealer_admin=True).first()
+        if dealer_admin is not None:
+            return UserDealerSerializer(dealer_admin).data
 
 
 class SupplierCreateSerializer(serializers.ModelSerializer):
