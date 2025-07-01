@@ -12,7 +12,7 @@ class UserAdmin(UserAdmin):
             {'fields': (
                 'email', 'username', 'first_name', 'rs_code', 'supplier',
                 'last_name', 'password1', 'password2', 'is_distributor',
-                'is_supplier', 'is_dealer'
+                'is_supplier', 'is_dealer', 'is_dealer_admin'
             )
             }
         ),
@@ -24,6 +24,7 @@ class UserAdmin(UserAdmin):
                     'is_distributor',
                     'is_supplier',
                     'is_dealer',
+                    'is_dealer_admin',
                     'rs_code',
                     'supplier',
                     'phone',
@@ -40,7 +41,8 @@ class UserAdmin(UserAdmin):
         'last_name',
         'is_distributor',
         'is_supplier',
-        'is_dealer'
+        'is_dealer',
+        'is_dealer_admin'
     )
     list_filter = ('email', 'username')
     search_fields = ('email', 'username',)

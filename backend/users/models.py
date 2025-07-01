@@ -120,6 +120,7 @@ class User(AbstractUser):
     is_distributor = models.BooleanField(default=False)
     is_supplier = models.BooleanField(default=False)
     is_dealer = models.BooleanField(default=False)
+    is_dealer_admin = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = (
