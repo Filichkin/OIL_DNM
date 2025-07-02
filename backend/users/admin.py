@@ -54,8 +54,10 @@ class DealerAdmin(admin.ModelAdmin):
     list_display = (
         'rs_code',
         'name',
+        'city',
         'inn',
         'legal_address',
+        'delivery_time',
     )
 
 

@@ -6,6 +6,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from .constants import (
     CITY_MAX_LENGTH,
     DEALER_NAME_MAX_LENGTH,
+    DESCRIPTION_MAX_LENGTH,
     EMAIL_MAX_LENGTH,
     FIRST_NAME_MAX_LENGTH,
     JOB_TITLE_MAX_LENGTH,
@@ -42,6 +43,16 @@ class Dealer(models.Model):
     legal_address = models.CharField(
         max_length=ADDRESS_MAX_LENGTH,
         verbose_name='Dealer legal address',
+    )
+    delivery_time = models.PositiveSmallIntegerField(
+        verbose_name='Delivery time to dealer',
+        default=1
+    )
+    transport_size_limitation = models.CharField(
+        max_length=DESCRIPTION_MAX_LENGTH,
+        verbose_name='Transport size limitation',
+        blank=True,
+        null=True
     )
 
     class Meta:
