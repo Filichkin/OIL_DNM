@@ -47,9 +47,12 @@ class DealerCreateSerializer(serializers.ModelSerializer):
             'id',
             'rs_code',
             'name',
+            'city',
             'inn',
             'address',
             'legal_address',
+            'delivery_time',
+            'transport_size_limitation',
         )
 
 
@@ -67,9 +70,12 @@ class DealerReadSerializer(serializers.ModelSerializer):
             'id',
             'rs_code',
             'name',
+            'city',
             'inn',
             'address',
             'legal_address',
+            'delivery_time',
+            'transport_size_limitation',
             'users',
             'dealer_admin',
         )
