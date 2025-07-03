@@ -16,6 +16,12 @@
 * Ресурс **cart**: корзина заказов
 * Ресурс **orders**: заказы
 
+### Документация для проекта OIL DNM:
+
+<img src="swagger_1.png" width="800" height: auto>
+<img src="swagger_2.png" width="800" height: auto>
+<img src="swagger_3.png" width="800" height: auto>
+
 
 ## Стек технологий
 
