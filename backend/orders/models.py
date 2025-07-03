@@ -68,8 +68,11 @@ class Order(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.delivery_date:
+            delivery_days = self.dealer.delivery_time
             self.delivery_date = (
-                datetime.now(tz=get_current_timezone()) + timedelta(days=3)
+                datetime.now(
+                    tz=get_current_timezone()
+                    ) + timedelta(days=delivery_days)
                 )
         super().save(*args, **kwargs)
 
