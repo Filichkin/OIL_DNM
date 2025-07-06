@@ -5,12 +5,12 @@ from api.orders.serializers import (
     OrderCreateSerializer,
     OrderReadSerializer
 )
-from api.permissions import IsDistributorOrDealer
+from api.permissions import IsDistributorOrDealerOrSupplier
 from orders.models import Order
 
 
 class OrderViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsDistributorOrDealer,]
+    permission_classes = [IsDistributorOrDealerOrSupplier,]
     queryset = Order.objects.all()
 
     def get_serializer_class(self):
