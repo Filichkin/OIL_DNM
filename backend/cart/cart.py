@@ -86,7 +86,7 @@ class Cart:
         self.save
 
     def get_cart_items(self):
-        return self
+        return self.cart
 
     def get_cart_items_list(self) -> list:
         # Return cart items in a structured format for API serialization

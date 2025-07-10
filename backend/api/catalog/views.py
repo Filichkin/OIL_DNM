@@ -2,7 +2,7 @@ from django.db.models import OuterRef, Subquery
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.exceptions import NotFound
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -106,36 +106,10 @@ class CartView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get(self, request, *args, **kwargs):
-
-        query_params = request.query_params
-
-        # Validate allowed parameters
-        allowed_params = {'count', 'items', 'total_price'}
-        invalid_params = set(query_params.keys()) - allowed_params
-        if invalid_params:
-            raise ValidationError(
-                {
-                    'error': f"Invalid query parameters: "
-                             f"{', '.join(invalid_params)}"
-                    }
-            )
-        get_total_count = 'count' in query_params
-        get_total_items = 'items' in query_params
-        get_total_price = 'total_price' in query_params
-
         cart = Cart(request)
-
-        if get_total_count:
-            return Response({'total_count': len(cart)}, status=206)
-
-        cart_items = cart.get_cart_items()
-
-        if get_total_items:
-            return Response({'cart_items': len(cart_items)}, status=206)
-
-        if get_total_price:
-            return Response({'total_price': cart.get_total_price}, status=201)
-
+        # cart_items = list(
+        #    cart.get_cart_items()[str(request.user.rs_code)].values()
+        #    )
         serializer = CartContentSerializer(cart, many=True)
         return Response(serializer.data)
 
