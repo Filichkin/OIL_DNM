@@ -1,6 +1,6 @@
 # OIL ORDERS DNM (в разработке)
 
-Проект OIL ORDERS DNM позволяет дилерам размещать заказы на масла и технологические жидкости
+Ресурс OIL ORDERS DNM позволяет дилерам размещать заказы на масла и технологические жидкости
 
 <img src="example.png" width="800" height: auto>
 
@@ -17,6 +17,11 @@
 * Ресурс **orders**: заказы
 
 ### Документация для проекта OIL DNM:
+
+<p>Ссылка на swagger:</p>
+
+<http://127.0.0.1:8000/swagger/>
+
 
 <img src="swagger_3.png" width="800" height: auto>
 <img src="swagger_1.png" width="800" height: auto>
