@@ -108,3 +108,9 @@ class OrderReadSerializer(serializers.ModelSerializer):
             'delivery_date',
             'comment',
             )
+
+
+class OrderUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ('status',)
